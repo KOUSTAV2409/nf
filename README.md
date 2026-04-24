@@ -32,7 +32,7 @@ $ nf search port
 **One-liner:**
 
 ```bash
-curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/nf/main/install.sh | bash
+curl -sL https://nf.iamk.xyz/install | bash
 ```
 
 **Manual:**
@@ -110,7 +110,7 @@ It's a plain text file — one note per line, date-prefixed. You can read it wit
 ## Uninstall
 
 ```bash
-curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/nf/main/uninstall.sh | bash
+curl -sL https://nf.iamk.xyz/uninstall | bash
 ```
 
 Or manually:
