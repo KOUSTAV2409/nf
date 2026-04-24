@@ -3,798 +3,441 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nf — Note Fast | A minimal terminal note-taking tool for Linux</title>
-  <meta name="description" content="nf is a single-command note tool for Linux. Capture commands and thoughts instantly from your terminal. No cloud, no account, no setup. Just fast, local, plain-text notes.">
-  <meta name="keywords" content="nf, note fast, linux, terminal, cli, command line, notes, bash, minimal">
-  <meta name="author" content="YOUR_USERNAME">
+  <title>nf — Note Fast</title>
+  <meta name="description" content="A single-command note tool for Linux. Capture commands instantly from your terminal.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
-    /* --- Reset & Base --- */
-    *, *::before, *::after {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
     :root {
-      --bg: #0d0d0f;
-      --surface: #16161a;
-      --border: #2a2a32;
-      --accent: #5affa3;
-      --accent2: #5ac8ff;
-      --text: #e2e2ea;
-      --muted: #6b6b7a;
-      --code-bg: #1a1a20;
-      --glow: rgba(90, 255, 163, 0.08);
+      --bg: #111;
+      --surface: #191919;
+      --border: #282828;
+      --green: #4ae68a;
+      --text: #d4d4d4;
+      --dim: #666;
+      --code-bg: #161616;
     }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      font-family: 'SF Mono', 'Cascadia Code', 'Fira Code', 'JetBrains Mono', 'Consolas', monospace;
       background: var(--bg);
       color: var(--text);
-      line-height: 1.7;
+      line-height: 1.6;
+      font-size: 14px;
       -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
     }
 
-    /* --- Layout --- */
-    .container {
-      max-width: 720px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+    .w { max-width: 640px; margin: 0 auto; padding: 0 20px; }
 
-    section {
-      padding: 80px 0;
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ---- top bar ---- */
+    header {
       border-bottom: 1px solid var(--border);
-    }
-
-    section:last-of-type {
-      border-bottom: none;
-    }
-
-    /* --- Typography --- */
-    h1, h2, h3 {
-      font-family: 'Courier New', Courier, monospace;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-    }
-
-    h2 {
-      font-size: 1.4rem;
-      color: var(--accent2);
-      margin-bottom: 32px;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    h2::before {
-      content: '>';
-      color: var(--muted);
-      font-weight: 400;
-    }
-
-    p {
-      color: var(--muted);
-      margin-bottom: 16px;
-    }
-
-    a {
-      color: var(--accent);
-      text-decoration: none;
-      transition: opacity 0.2s;
-    }
-
-    a:hover {
-      opacity: 0.8;
-      text-decoration: underline;
-    }
-
-    /* --- Navigation --- */
-    nav {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background: rgba(13, 13, 15, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-    }
-
-    nav .container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 56px;
-    }
-
-    .nav-logo {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 24px;
-      list-style: none;
-    }
-
-    .nav-links a {
-      color: var(--muted);
-      font-size: 0.85rem;
-      font-family: 'Courier New', Courier, monospace;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover {
-      color: var(--text);
-      text-decoration: none;
-    }
-
-    .nav-github {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .nav-github svg {
-      width: 16px;
-      height: 16px;
-      fill: currentColor;
-    }
-
-    /* --- Hero --- */
-    .hero {
-      padding: 160px 0 100px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero::before {
-      content: '';
-      position: absolute;
-      top: 80px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .hero-title {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: clamp(4rem, 12vw, 7rem);
-      font-weight: 700;
-      color: var(--accent);
-      line-height: 1;
-      margin-bottom: 16px;
-      position: relative;
-      text-shadow: 0 0 80px rgba(90, 255, 163, 0.3);
-    }
-
-    .hero-subtitle {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: clamp(1.2rem, 3vw, 1.6rem);
-      color: var(--text);
-      font-weight: 400;
-      margin-bottom: 12px;
-    }
-
-    .hero-desc {
-      font-size: 1.05rem;
-      color: var(--muted);
-      max-width: 480px;
-      margin: 0 auto 48px;
-      line-height: 1.6;
-    }
-
-    /* --- Install Block --- */
-    .install-block {
-      display: inline-flex;
-      align-items: center;
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 0;
-      max-width: 100%;
-      overflow: hidden;
-      transition: border-color 0.3s;
-    }
-
-    .install-block:hover {
-      border-color: var(--accent);
-    }
-
-    .install-prefix {
-      color: var(--muted);
-      padding: 14px 0 14px 20px;
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
-      user-select: none;
-    }
-
-    .install-cmd {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
-      color: var(--text);
-      padding: 14px 8px;
-      white-space: nowrap;
-      overflow-x: auto;
-    }
-
-    .copy-btn {
-      background: none;
-      border: none;
-      border-left: 1px solid var(--border);
-      color: var(--muted);
-      cursor: pointer;
-      padding: 14px 16px;
-      font-size: 0.85rem;
-      font-family: 'Courier New', Courier, monospace;
-      transition: color 0.2s, background 0.2s;
-      white-space: nowrap;
-    }
-
-    .copy-btn:hover {
-      color: var(--accent);
-      background: rgba(90, 255, 163, 0.05);
-    }
-
-    .copy-btn.copied {
-      color: var(--accent);
-    }
-
-    /* --- Code Blocks --- */
-    .code-block {
-      background: var(--code-bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px;
-      margin: 16px 0;
-      overflow-x: auto;
-      position: relative;
-    }
-
-    .code-block pre {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.88rem;
-      line-height: 1.7;
-      color: var(--text);
-      margin: 0;
-    }
-
-    .code-block .prompt {
-      color: var(--accent);
-      user-select: none;
-    }
-
-    .code-block .cmd {
-      color: var(--text);
-    }
-
-    .code-block .output {
-      color: var(--muted);
-    }
-
-    .code-block .comment {
-      color: var(--muted);
-      font-style: italic;
-    }
-
-    .code-block .flag {
-      color: var(--accent2);
-    }
-
-    .code-block .string {
-      color: #f0c674;
-    }
-
-    .code-block .num {
-      color: var(--muted);
-    }
-
-    .code-block .date {
-      color: var(--accent2);
-    }
-
-    .code-label {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.75rem;
-      color: var(--muted);
-      margin-bottom: 8px;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-    }
-
-    /* --- Steps --- */
-    .steps {
-      display: flex;
-      flex-direction: column;
-      gap: 32px;
-    }
-
-    .step {
-      position: relative;
-    }
-
-    .step-header {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 12px;
-    }
-
-    .step-num {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.8rem;
-      color: var(--accent);
-      background: rgba(90, 255, 163, 0.08);
-      border: 1px solid rgba(90, 255, 163, 0.2);
-      border-radius: 6px;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-    }
-
-    .step-title {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.95rem;
-      color: var(--text);
-    }
-
-    /* --- Commands Table --- */
-    .cmd-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    .cmd-table tr {
-      border-bottom: 1px solid var(--border);
-      transition: background 0.2s;
-    }
-
-    .cmd-table tr:hover {
-      background: rgba(90, 255, 163, 0.03);
-    }
-
-    .cmd-table tr:last-child {
-      border-bottom: none;
-    }
-
-    .cmd-table td {
       padding: 14px 0;
-      vertical-align: top;
+      position: sticky;
+      top: 0;
+      background: rgba(17,17,17,0.92);
+      backdrop-filter: blur(8px);
+      z-index: 10;
+    }
+    header .w {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo { color: var(--green); font-weight: 700; font-size: 15px; letter-spacing: -0.5px; }
+    .hdr-links { display: flex; gap: 20px; }
+    .hdr-links a { color: var(--dim); font-size: 13px; }
+    .hdr-links a:hover { color: var(--text); text-decoration: none; }
+
+    /* ---- hero ---- */
+    .hero {
+      padding: 100px 0 72px;
+    }
+    .hero h1 {
+      font-size: 44px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -1.5px;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+    }
+    .hero .tagline {
+      color: var(--dim);
+      font-size: 15px;
+      line-height: 1.7;
+      max-width: 420px;
+      margin-bottom: 36px;
     }
 
-    .cmd-table td:first-child {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.88rem;
-      color: var(--accent);
+    /* install bar */
+    .install-bar {
+      display: flex;
+      align-items: stretch;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      max-width: 460px;
+      overflow: hidden;
+    }
+    .install-bar code {
+      flex: 1;
+      padding: 12px 14px;
+      font-size: 13px;
+      color: var(--text);
       white-space: nowrap;
-      padding-right: 32px;
-      width: 1%;
-    }
-
-    .cmd-table td:last-child {
-      color: var(--muted);
-      font-size: 0.9rem;
-    }
-
-    /* --- Why List --- */
-    .why-list {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    .why-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.6;
-    }
-
-    .why-list li::before {
-      content: '•';
-      color: var(--accent);
-      font-size: 1.2rem;
-      line-height: 1.5;
-      flex-shrink: 0;
-    }
-
-    .why-list strong {
-      color: var(--text);
-      font-weight: 600;
-    }
-
-    /* --- Install Section --- */
-    .install-option {
-      margin-bottom: 32px;
-    }
-
-    .install-option:last-child {
-      margin-bottom: 0;
-    }
-
-    .install-option-label {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.85rem;
-      color: var(--text);
-      margin-bottom: 12px;
+      overflow-x: auto;
       display: flex;
       align-items: center;
       gap: 8px;
     }
+    .install-bar code .ps { color: var(--green); user-select: none; }
+    .install-bar button {
+      background: var(--surface);
+      border: none;
+      border-left: 1px solid var(--border);
+      color: var(--dim);
+      padding: 0 14px;
+      font: inherit;
+      font-size: 12px;
+      cursor: pointer;
+      transition: color 0.15s;
+    }
+    .install-bar button:hover { color: var(--green); }
+    .install-bar button.ok { color: var(--green); }
 
-    .install-option-label .tag {
-      font-size: 0.7rem;
-      color: var(--accent);
-      background: rgba(90, 255, 163, 0.08);
-      border: 1px solid rgba(90, 255, 163, 0.2);
-      border-radius: 4px;
-      padding: 2px 8px;
+    /* ---- section dividers ---- */
+    .sep { border: none; border-top: 1px solid var(--border); margin: 0; }
+
+    /* ---- demo section ---- */
+    .demo { padding: 64px 0; }
+    .demo h2 {
+      font-size: 13px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      margin-bottom: 32px;
+      font-weight: 500;
     }
 
-    /* --- Footer --- */
-    footer {
-      padding: 48px 0;
-      text-align: center;
-      border-top: 1px solid var(--border);
+    .terminal {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
     }
-
-    .footer-links {
+    .terminal-bar {
       display: flex;
-      justify-content: center;
-      gap: 24px;
-      margin-bottom: 20px;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+    }
+    .terminal-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background: var(--border);
+    }
+    .terminal-bar span {
+      margin-left: 8px;
+      font-size: 11px;
+      color: var(--dim);
+    }
+    .terminal pre {
+      padding: 20px;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+      color: var(--text);
+    }
+    .terminal .p { color: var(--green); user-select: none; }
+    .terminal .c { color: #888; font-style: italic; }
+    .terminal .o { color: var(--dim); }
+    .terminal .s { color: #d19a66; }
+    .terminal .h { color: #61afef; }
+
+    /* ---- commands ---- */
+    .commands { padding: 64px 0; }
+    .commands h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      margin-bottom: 24px;
+      font-weight: 500;
+    }
+    .cmd-grid {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      background: var(--code-bg);
+    }
+    .cmd-grid .k, .cmd-grid .v {
+      padding: 10px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+    }
+    .cmd-grid .k {
+      color: var(--green);
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+      background: var(--code-bg);
+    }
+    .cmd-grid .v { color: var(--dim); background: var(--surface); }
+    .cmd-grid .k:last-of-type,
+    .cmd-grid .v:last-of-type { border-bottom: none; }
+
+    /* ---- why ---- */
+    .why { padding: 64px 0; }
+    .why h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .why ul { list-style: none; }
+    .why li {
+      color: var(--dim);
+      font-size: 14px;
+      padding: 8px 0;
+      display: flex;
+      gap: 10px;
+      align-items: baseline;
+    }
+    .why li::before {
+      content: '—';
+      color: var(--border);
+      flex-shrink: 0;
+    }
+    .why li b { color: var(--text); font-weight: 600; }
+
+    /* ---- install section ---- */
+    .inst { padding: 64px 0; }
+    .inst h2 {
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--dim);
+      margin-bottom: 28px;
+      font-weight: 500;
+    }
+    .inst-label {
+      font-size: 12px;
+      color: var(--dim);
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+    }
+    .inst-label .rec {
+      color: var(--green);
+      border: 1px solid rgba(74,230,138,0.25);
+      background: rgba(74,230,138,0.06);
+      padding: 1px 6px;
+      border-radius: 3px;
+      font-size: 10px;
+      margin-left: 6px;
+      vertical-align: 1px;
+    }
+    .inst-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      margin-bottom: 28px;
+    }
+    .inst-block pre {
+      padding: 14px 16px;
+      font-size: 13px;
+      line-height: 1.8;
+      overflow-x: auto;
+    }
+    .inst-block .p { color: var(--green); user-select: none; }
+
+    /* ---- footer ---- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+    }
+    footer .w {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       flex-wrap: wrap;
+      gap: 12px;
     }
+    .foot-left { color: var(--dim); font-size: 12px; }
+    .foot-right { display: flex; gap: 16px; }
+    .foot-right a { color: var(--dim); font-size: 12px; }
+    .foot-right a:hover { color: var(--text); text-decoration: none; }
 
-    .footer-links a {
-      font-family: 'Courier New', Courier, monospace;
-      font-size: 0.8rem;
-      color: var(--muted);
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover {
-      color: var(--accent);
-      text-decoration: none;
-    }
-
-    .footer-tagline {
-      font-size: 0.8rem;
-      color: var(--muted);
-      font-family: 'Courier New', Courier, monospace;
-    }
-
-    /* --- Animations --- */
-    @keyframes fadeUp {
-      from {
-        opacity: 0;
-        transform: translateY(20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .animate-in {
-      animation: fadeUp 0.6s ease-out both;
-    }
-
-    .animate-delay-1 { animation-delay: 0.1s; }
-    .animate-delay-2 { animation-delay: 0.2s; }
-    .animate-delay-3 { animation-delay: 0.3s; }
-    .animate-delay-4 { animation-delay: 0.4s; }
-
-    /* Cursor blink for the hero */
-    .cursor {
-      display: inline-block;
-      width: 2px;
-      height: 1em;
-      background: var(--accent);
-      margin-left: 4px;
-      vertical-align: text-bottom;
-      animation: blink 1s step-end infinite;
-    }
-
-    @keyframes blink {
-      0%, 50% { opacity: 1; }
-      51%, 100% { opacity: 0; }
-    }
-
-    /* --- Responsive --- */
-    @media (max-width: 600px) {
-      section {
-        padding: 56px 0;
-      }
-
-      .hero {
-        padding: 120px 0 72px;
-      }
-
-      .install-block {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .install-prefix {
-        padding: 12px 16px 0;
-      }
-
-      .install-cmd {
-        padding: 4px 16px 12px;
-        font-size: 0.78rem;
-      }
-
-      .copy-btn {
-        border-left: none;
-        border-top: 1px solid var(--border);
-        padding: 10px 16px;
-      }
-
-      .nav-links {
-        display: none;
-      }
-
-      .cmd-table td:first-child {
-        padding-right: 16px;
-        font-size: 0.8rem;
-      }
-
-      h2 {
-        font-size: 1.2rem;
-      }
+    /* ---- responsive ---- */
+    @media (max-width: 520px) {
+      .hero h1 { font-size: 32px; }
+      .hdr-links a:not(:last-child) { display: none; }
+      .cmd-grid { font-size: 12px; }
+      footer .w { flex-direction: column; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Navigation -->
-  <nav>
-    <div class="container">
-      <span class="nav-logo">nf</span>
-      <ul class="nav-links">
-        <li><a href="#how-it-works">how it works</a></li>
-        <li><a href="#commands">commands</a></li>
-        <li><a href="#why">why nf</a></li>
-        <li><a href="#install">install</a></li>
-        <li>
-          <a href="https://github.com/YOUR_USERNAME/nf" class="nav-github" target="_blank" rel="noopener">
-            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-            GitHub
-          </a>
-        </li>
-      </ul>
+  <header>
+    <div class="w">
+      <span class="logo">nf</span>
+      <div class="hdr-links">
+        <a href="#demo">demo</a>
+        <a href="#commands">commands</a>
+        <a href="#install">install</a>
+        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+      </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- Hero -->
   <section class="hero">
-    <div class="container">
-      <h1 class="hero-title animate-in">nf<span class="cursor"></span></h1>
-      <p class="hero-subtitle animate-in animate-delay-1">Note Fast.</p>
-      <p class="hero-desc animate-in animate-delay-2">
-        A single-command note tool for Linux.<br>
-        No cloud. No account. Just your terminal.
+    <div class="w">
+      <h1><em>nf</em> — note fast</h1>
+      <p class="tagline">
+        You learn a command. You forget it next week.<br>
+        nf saves it in one line and finds it later.<br>
+        No cloud. No setup. Plain text. That's it.
       </p>
-      <div class="install-block animate-in animate-delay-3">
-        <span class="install-prefix">$</span>
-        <code class="install-cmd" id="hero-install-cmd">curl -sL https://nf.iamk.xyz/install | bash</code>
-        <button class="copy-btn" onclick="copyInstall(this)" aria-label="Copy install command">copy</button>
+      <div class="install-bar">
+        <code><span class="ps">$</span> <span id="cmd1">curl -sL https://nf.iamk.xyz/install | bash</span></code>
+        <button onclick="cp(this,'cmd1')" aria-label="Copy">copy</button>
       </div>
     </div>
   </section>
 
-  <!-- How it works -->
-  <section id="how-it-works">
-    <div class="container">
+  <hr class="sep">
+
+  <section class="demo" id="demo">
+    <div class="w">
       <h2>How it works</h2>
-      <div class="steps">
-        <div class="step animate-in">
-          <div class="step-header">
-            <span class="step-num">1</span>
-            <span class="step-title">Learn a command</span>
-          </div>
-          <div class="code-block">
-            <p class="code-label">you just found this on stack overflow</p>
-            <pre><span class="prompt">$ </span><span class="cmd">fuser -k 3000/tcp</span>
-<span class="output">killed process on port 3000</span></pre>
-          </div>
+      <div class="terminal">
+        <div class="terminal-bar">
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <div class="terminal-dot"></div>
+          <span>~</span>
         </div>
+        <pre>
+<span class="c"># you just found this on stackoverflow</span>
+<span class="p">$ </span>fuser -k 3000/tcp
 
-        <div class="step animate-in animate-delay-1">
-          <div class="step-header">
-            <span class="step-num">2</span>
-            <span class="step-title">Note it</span>
-          </div>
-          <div class="code-block">
-            <pre><span class="prompt">$ </span><span class="cmd">nf </span><span class="string">"fuser -k 3000/tcp — kills process on port 3000"</span>
-<span class="output">Note saved.</span></pre>
-          </div>
-        </div>
+<span class="c"># save it before you forget</span>
+<span class="p">$ </span>nf <span class="s">"fuser -k 3000/tcp — kills process on port 3000"</span>
+<span class="o">Note saved.</span>
 
-        <div class="step animate-in animate-delay-2">
-          <div class="step-header">
-            <span class="step-num">3</span>
-            <span class="step-title">Find it later</span>
-          </div>
-          <div class="code-block">
-            <pre><span class="prompt">$ </span><span class="cmd">nf search </span><span class="flag">port</span>
-<span class="num"> 1</span>  <span class="date">2025-04-25</span>  <span class="output">fuser -k 3000/tcp — kills process on port 3000</span>
-<span class="num"> 3</span>  <span class="date">2025-04-25</span>  <span class="output">ss -tulpn | grep LISTEN — shows all listening ports</span></pre>
-          </div>
-        </div>
+<span class="c"># two weeks later...</span>
+<span class="p">$ </span>nf search <span class="h">port</span>
+<span class="o"> 1  2025-04-25  fuser -k 3000/tcp — kills process on port 3000</span>
+<span class="o"> 3  2025-04-25  ss -tulpn | grep LISTEN — shows all listening ports</span>
+
+<span class="c"># or just browse everything</span>
+<span class="p">$ </span>nf list
+<span class="o"> 1  2025-04-25  fuser -k 3000/tcp — kills process on port 3000</span>
+<span class="o"> 2  2025-04-25  ss -tulpn | grep LISTEN — shows all listening ports</span>
+<span class="o"> 3  2025-04-24  du -sh */ | sort -rh — disk usage sorted by size</span>
+<span class="o"> 4  2025-04-24  tar -xzf archive.tar.gz -C /tmp — extract to /tmp</span>
+        </pre>
       </div>
     </div>
   </section>
 
-  <!-- Commands -->
-  <section id="commands">
-    <div class="container">
+  <hr class="sep">
+
+  <section class="commands" id="commands">
+    <div class="w">
       <h2>Commands</h2>
-      <table class="cmd-table">
-        <tr>
-          <td>nf "text"</td>
-          <td>Save a new note</td>
-        </tr>
-        <tr>
-          <td>nf</td>
-          <td>Open TUI (requires fzf) or list notes</td>
-        </tr>
-        <tr>
-          <td>nf list</td>
-          <td>List all notes</td>
-        </tr>
-        <tr>
-          <td>nf search &lt;term&gt;</td>
-          <td>Search notes (case-insensitive)</td>
-        </tr>
-        <tr>
-          <td>nf del &lt;n&gt;</td>
-          <td>Delete a note by number</td>
-        </tr>
-        <tr>
-          <td>nf edit</td>
-          <td>Open notes in $EDITOR</td>
-        </tr>
-        <tr>
-          <td>nf count</td>
-          <td>Show total number of notes</td>
-        </tr>
-        <tr>
-          <td>nf help</td>
-          <td>Show help</td>
-        </tr>
-        <tr>
-          <td>nf version</td>
-          <td>Show version</td>
-        </tr>
-      </table>
+      <div class="cmd-grid">
+        <div class="k">nf "text"</div>          <div class="v">save a new note</div>
+        <div class="k">nf</div>                  <div class="v">open TUI (fzf) or list notes</div>
+        <div class="k">nf list</div>             <div class="v">print all notes</div>
+        <div class="k">nf search &lt;term&gt;</div> <div class="v">grep through notes</div>
+        <div class="k">nf del &lt;n&gt;</div>       <div class="v">delete note by number</div>
+        <div class="k">nf edit</div>             <div class="v">open notes in $EDITOR</div>
+        <div class="k">nf count</div>            <div class="v">total notes</div>
+        <div class="k">nf help</div>             <div class="v">usage</div>
+        <div class="k">nf version</div>          <div class="v">print version</div>
+      </div>
     </div>
   </section>
 
-  <!-- Why nf -->
-  <section id="why">
-    <div class="container">
-      <h2>Why nf</h2>
-      <ul class="why-list">
-        <li><strong>Fast.</strong> One command to save. One command to search. Under 3 seconds.</li>
-        <li><strong>Local.</strong> No cloud, no account, no internet required. Your notes never leave your machine.</li>
-        <li><strong>Plain text.</strong> Notes live in a single file at <code style="color:var(--accent2)">~/.local/share/nf/notes</code>. grep it, cat it, back it up.</li>
-        <li><strong>No setup.</strong> Install and use immediately. No config files, no databases, no init commands.</li>
-        <li><strong>Open source.</strong> MIT licensed. Fork it, extend it, make it yours.</li>
+  <hr class="sep">
+
+  <section class="why" id="why">
+    <div class="w">
+      <h2>Why this exists</h2>
+      <ul>
+        <li><b>3 seconds.</b> That's the whole UX. Type nf, paste your note, done.</li>
+        <li><b>One flat file.</b> Your notes live at <code style="color:var(--green)">~/.local/share/nf/notes</code>. It's just text. grep it, cat it, rsync it.</li>
+        <li><b>Zero dependencies.</b> Pure bash. No python, no node, no rust. Runs on any Linux box.</li>
+        <li><b>No cloud.</b> Nothing leaves your machine. Ever.</li>
+        <li><b>fzf optional.</b> If you have fzf installed, <code style="color:var(--green)">nf</code> opens a fuzzy TUI. If not, it just lists notes. Either way it works.</li>
       </ul>
     </div>
   </section>
 
-  <!-- Install -->
-  <section id="install">
-    <div class="container">
+  <hr class="sep">
+
+  <section class="inst" id="install">
+    <div class="w">
       <h2>Install</h2>
 
-      <div class="install-option">
-        <div class="install-option-label">
-          One-liner
-          <span class="tag">recommended</span>
-        </div>
-        <div class="code-block" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px;">
-          <pre style="margin:0;flex:1;overflow-x:auto"><span class="prompt">$ </span><span class="cmd" id="install-cmd-2">curl -sL https://nf.iamk.xyz/install | bash</span></pre>
-          <button class="copy-btn" onclick="copyInstall2(this)" style="border:none;border-left:1px solid var(--border);padding:8px 14px;margin:-16px -20px -16px 0;height:calc(100% + 32px);border-radius:0 7px 7px 0;" aria-label="Copy install command">copy</button>
-        </div>
+      <div class="inst-label">script <span class="rec">recommended</span></div>
+      <div class="install-bar" style="max-width:100%;margin-bottom:28px">
+        <code><span class="ps">$</span> <span id="cmd2">curl -sL https://nf.iamk.xyz/install | bash</span></code>
+        <button onclick="cp(this,'cmd2')" aria-label="Copy">copy</button>
       </div>
 
-      <div class="install-option">
-        <div class="install-option-label">Manual</div>
-        <div class="code-block">
-          <pre><span class="prompt">$ </span><span class="cmd">git clone https://github.com/YOUR_USERNAME/nf.git</span>
-<span class="prompt">$ </span><span class="cmd">cd nf</span>
-<span class="prompt">$ </span><span class="cmd">chmod +x nf.sh</span>
-<span class="prompt">$ </span><span class="cmd">sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf</span></pre>
-        </div>
+      <div class="inst-label">manual</div>
+      <div class="inst-block">
+        <pre><span class="p">$ </span>git clone https://github.com/KOUSTAV2409/nf.git
+<span class="p">$ </span>cd nf && chmod +x nf.sh
+<span class="p">$ </span>sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf</pre>
+      </div>
+
+      <div class="inst-label">then optionally</div>
+      <div class="inst-block">
+        <pre><span class="c"># for TUI mode (fuzzy search)</span>
+<span class="p">$ </span>sudo apt install fzf     <span class="c"># debian/ubuntu</span>
+<span class="p">$ </span>sudo pacman -S fzf        <span class="c"># arch</span>
+<span class="p">$ </span>sudo dnf install fzf      <span class="c"># fedora</span></pre>
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
   <footer>
-    <div class="container">
-      <div class="footer-links">
-        <a href="https://github.com/YOUR_USERNAME/nf" target="_blank" rel="noopener">GitHub</a>
-        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/README.md" target="_blank" rel="noopener">Docs</a>
-        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
-        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+    <div class="w">
+      <span class="foot-left">MIT — built by <a href="https://iamk.xyz" target="_blank" rel="noopener">iamk.xyz</a></span>
+      <div class="foot-right">
+        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/LICENSE" target="_blank" rel="noopener">license</a>
       </div>
-      <p class="footer-tagline">Made for Linux users by a Linux user.</p>
     </div>
   </footer>
 
   <script>
-    // Copy install command (hero)
-    function copyInstall(btn) {
-      const cmd = document.getElementById('hero-install-cmd').textContent;
-      navigator.clipboard.writeText(cmd).then(function() {
-        btn.textContent = 'copied!';
-        btn.classList.add('copied');
-        setTimeout(function() {
-          btn.textContent = 'copy';
-          btn.classList.remove('copied');
-        }, 2000);
+    function cp(btn, id) {
+      navigator.clipboard.writeText(document.getElementById(id).textContent).then(function() {
+        btn.textContent = 'copied';
+        btn.classList.add('ok');
+        setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('ok'); }, 1500);
       });
     }
-
-    // Copy install command (install section)
-    function copyInstall2(btn) {
-      const cmd = document.getElementById('install-cmd-2').textContent;
-      navigator.clipboard.writeText(cmd).then(function() {
-        btn.textContent = 'copied!';
-        btn.classList.add('copied');
-        setTimeout(function() {
-          btn.textContent = 'copy';
-          btn.classList.remove('copied');
-        }, 2000);
-      });
-    }
-
-    // Intersection Observer for scroll animations
-    (function() {
-      var observer = new IntersectionObserver(function(entries) {
-        entries.forEach(function(entry) {
-          if (entry.isIntersecting) {
-            entry.target.style.animationPlayState = 'running';
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.1 });
-
-      // Pause animations until visible (except hero which should animate immediately)
-      document.querySelectorAll('section:not(.hero) .animate-in').forEach(function(el) {
-        el.style.animationPlayState = 'paused';
-        observer.observe(el);
-      });
-    })();
   </script>
-
 </body>
 </html>
