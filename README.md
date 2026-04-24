@@ -9,7 +9,7 @@ No cloud. No account. No setup. Just your terminal.
 
 ## Demo
 
-[![asciicast](https://asciinema.org/a/l2bcd2e4okUUKaNs.svg)](https://asciinema.org/a/l2bcd2e4okUUKaNs)
+![nf demo](nf_demo.gif)
 
 <details>
 <summary>Text version</summary>
