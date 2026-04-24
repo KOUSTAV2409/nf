@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Uninstaller for nf — Note Fast
-# https://github.com/YOUR_USERNAME/nf
+# https://github.com/KOUSTAV2409/nf
 
 set -e
 

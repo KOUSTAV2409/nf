@@ -8,7 +8,7 @@ Thanks for your interest in contributing to nf! Here's how to get started.
 
 ```bash
 # Clone the repo
-git clone https://github.com/YOUR_USERNAME/nf.git
+git clone https://github.com/KOUSTAV2409/nf.git
 cd nf
 
 # Make the script executable
@@ -74,7 +74,7 @@ XDG_DATA_HOME=/tmp/nf_test ./nf.sh "test note"
 
 ## Reporting Issues
 
-Use the [issue templates](https://github.com/YOUR_USERNAME/nf/issues/new/choose) to report bugs or request features.
+Use the [issue templates](https://github.com/KOUSTAV2409/nf/issues/new/choose) to report bugs or request features.
 
 ---
 

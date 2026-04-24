@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Installer for nf — Note Fast
-# https://github.com/YOUR_USERNAME/nf
+# https://github.com/KOUSTAV2409/nf
 
 set -e
 
-REPO="https://raw.githubusercontent.com/YOUR_USERNAME/nf/main"
+REPO="https://raw.githubusercontent.com/KOUSTAV2409/nf/main"
 INSTALL_DIR="/usr/local/bin"
 SCRIPT="nf"
 
