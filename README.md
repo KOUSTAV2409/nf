@@ -2,7 +2,7 @@
 
 A minimal terminal note-taking tool for Linux and macOS.
 
-Capture a command or thought in one line. Find it later in seconds.
+Capture a command, a thought, or a snippet in one line. Find it later in seconds.
 No cloud. No account. No setup. Just your terminal.
 
 ---

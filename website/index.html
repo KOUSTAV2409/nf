@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>nf — Note Fast</title>
-  <meta name="description" content="A single-command note tool for Linux and macOS. Capture commands instantly from your terminal.">
+  <meta name="description" content="A single-command note tool for Linux and macOS. Capture anything instantly from your terminal — commands, thoughts, snippets, whatever.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -309,7 +309,7 @@
     <div class="w">
       <h1><em>nf</em> — note fast</h1>
       <p class="tagline">
-        You learn a command. You forget it next week.<br>
+        A thought. A command. A snippet. Whatever.<br>
         nf saves it in one line and finds it later.<br>
         No cloud. No setup. Plain text. Linux & macOS.
       </p>
@@ -333,11 +333,15 @@
           <span>~</span>
         </div>
         <pre>
-<span class="c"># you just found this on stackoverflow</span>
+<span class="c"># you found a useful command</span>
 <span class="p">$ </span>fuser -k 3000/tcp
 
 <span class="c"># save it before you forget</span>
 <span class="p">$ </span>nf <span class="s">"fuser -k 3000/tcp — kills process on port 3000"</span>
+<span class="o">Note saved.</span>
+
+<span class="c"># or jot down a thought</span>
+<span class="p">$ </span>nf <span class="s">"refactor auth module before friday"</span>
 <span class="o">Note saved.</span>
 
 <span class="c"># two weeks later...</span>
