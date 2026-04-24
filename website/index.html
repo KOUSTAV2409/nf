@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nf — Note Fast | A minimal terminal note-taking tool for Linux</title>
+  <meta name="description" content="nf is a single-command note tool for Linux. Capture commands and thoughts instantly from your terminal. No cloud, no account, no setup. Just fast, local, plain-text notes.">
+  <meta name="keywords" content="nf, note fast, linux, terminal, cli, command line, notes, bash, minimal">
+  <meta name="author" content="YOUR_USERNAME">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <style>
+    /* --- Reset & Base --- */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --bg: #0d0d0f;
+      --surface: #16161a;
+      --border: #2a2a32;
+      --accent: #5affa3;
+      --accent2: #5ac8ff;
+      --text: #e2e2ea;
+      --muted: #6b6b7a;
+      --code-bg: #1a1a20;
+      --glow: rgba(90, 255, 163, 0.08);
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* --- Layout --- */
+    .container {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    section {
+      padding: 80px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    section:last-of-type {
+      border-bottom: none;
+    }
+
+    /* --- Typography --- */
+    h1, h2, h3 {
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      color: var(--accent2);
+      margin-bottom: 32px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    h2::before {
+      content: '>';
+      color: var(--muted);
+      font-weight: 400;
+    }
+
+    p {
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    a:hover {
+      opacity: 0.8;
+      text-decoration: underline;
+    }
+
+    /* --- Navigation --- */
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: rgba(13, 13, 15, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    nav .container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 56px;
+    }
+
+    .nav-logo {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 24px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      color: var(--muted);
+      font-size: 0.85rem;
+      font-family: 'Courier New', Courier, monospace;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--text);
+      text-decoration: none;
+    }
+
+    .nav-github {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .nav-github svg {
+      width: 16px;
+      height: 16px;
+      fill: currentColor;
+    }
+
+    /* --- Hero --- */
+    .hero {
+      padding: 160px 0 100px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 80px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-title {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(4rem, 12vw, 7rem);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      margin-bottom: 16px;
+      position: relative;
+      text-shadow: 0 0 80px rgba(90, 255, 163, 0.3);
+    }
+
+    .hero-subtitle {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      color: var(--text);
+      font-weight: 400;
+      margin-bottom: 12px;
+    }
+
+    .hero-desc {
+      font-size: 1.05rem;
+      color: var(--muted);
+      max-width: 480px;
+      margin: 0 auto 48px;
+      line-height: 1.6;
+    }
+
+    /* --- Install Block --- */
+    .install-block {
+      display: inline-flex;
+      align-items: center;
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0;
+      max-width: 100%;
+      overflow: hidden;
+      transition: border-color 0.3s;
+    }
+
+    .install-block:hover {
+      border-color: var(--accent);
+    }
+
+    .install-prefix {
+      color: var(--muted);
+      padding: 14px 0 14px 20px;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      user-select: none;
+    }
+
+    .install-cmd {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+      padding: 14px 8px;
+      white-space: nowrap;
+      overflow-x: auto;
+    }
+
+    .copy-btn {
+      background: none;
+      border: none;
+      border-left: 1px solid var(--border);
+      color: var(--muted);
+      cursor: pointer;
+      padding: 14px 16px;
+      font-size: 0.85rem;
+      font-family: 'Courier New', Courier, monospace;
+      transition: color 0.2s, background 0.2s;
+      white-space: nowrap;
+    }
+
+    .copy-btn:hover {
+      color: var(--accent);
+      background: rgba(90, 255, 163, 0.05);
+    }
+
+    .copy-btn.copied {
+      color: var(--accent);
+    }
+
+    /* --- Code Blocks --- */
+    .code-block {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 24px;
+      margin: 16px 0;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .code-block pre {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.88rem;
+      line-height: 1.7;
+      color: var(--text);
+      margin: 0;
+    }
+
+    .code-block .prompt {
+      color: var(--accent);
+      user-select: none;
+    }
+
+    .code-block .cmd {
+      color: var(--text);
+    }
+
+    .code-block .output {
+      color: var(--muted);
+    }
+
+    .code-block .comment {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .code-block .flag {
+      color: var(--accent2);
+    }
+
+    .code-block .string {
+      color: #f0c674;
+    }
+
+    .code-block .num {
+      color: var(--muted);
+    }
+
+    .code-block .date {
+      color: var(--accent2);
+    }
+
+    .code-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    /* --- Steps --- */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .step {
+      position: relative;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .step-num {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      color: var(--accent);
+      background: rgba(90, 255, 163, 0.08);
+      border: 1px solid rgba(90, 255, 163, 0.2);
+      border-radius: 6px;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.95rem;
+      color: var(--text);
+    }
+
+    /* --- Commands Table --- */
+    .cmd-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .cmd-table tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    .cmd-table tr:hover {
+      background: rgba(90, 255, 163, 0.03);
+    }
+
+    .cmd-table tr:last-child {
+      border-bottom: none;
+    }
+
+    .cmd-table td {
+      padding: 14px 0;
+      vertical-align: top;
+    }
+
+    .cmd-table td:first-child {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.88rem;
+      color: var(--accent);
+      white-space: nowrap;
+      padding-right: 32px;
+      width: 1%;
+    }
+
+    .cmd-table td:last-child {
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+
+    /* --- Why List --- */
+    .why-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .why-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .why-list li::before {
+      content: '•';
+      color: var(--accent);
+      font-size: 1.2rem;
+      line-height: 1.5;
+      flex-shrink: 0;
+    }
+
+    .why-list strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    /* --- Install Section --- */
+    .install-option {
+      margin-bottom: 32px;
+    }
+
+    .install-option:last-child {
+      margin-bottom: 0;
+    }
+
+    .install-option-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.85rem;
+      color: var(--text);
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .install-option-label .tag {
+      font-size: 0.7rem;
+      color: var(--accent);
+      background: rgba(90, 255, 163, 0.08);
+      border: 1px solid rgba(90, 255, 163, 0.2);
+      border-radius: 4px;
+      padding: 2px 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+
+    /* --- Footer --- */
+    footer {
+      padding: 48px 0;
+      text-align: center;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer-links {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .footer-links a {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.8rem;
+      color: var(--muted);
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    .footer-tagline {
+      font-size: 0.8rem;
+      color: var(--muted);
+      font-family: 'Courier New', Courier, monospace;
+    }
+
+    /* --- Animations --- */
+    @keyframes fadeUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .animate-in {
+      animation: fadeUp 0.6s ease-out both;
+    }
+
+    .animate-delay-1 { animation-delay: 0.1s; }
+    .animate-delay-2 { animation-delay: 0.2s; }
+    .animate-delay-3 { animation-delay: 0.3s; }
+    .animate-delay-4 { animation-delay: 0.4s; }
+
+    /* Cursor blink for the hero */
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 1em;
+      background: var(--accent);
+      margin-left: 4px;
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      51%, 100% { opacity: 0; }
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 600px) {
+      section {
+        padding: 56px 0;
+      }
+
+      .hero {
+        padding: 120px 0 72px;
+      }
+
+      .install-block {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .install-prefix {
+        padding: 12px 16px 0;
+      }
+
+      .install-cmd {
+        padding: 4px 16px 12px;
+        font-size: 0.78rem;
+      }
+
+      .copy-btn {
+        border-left: none;
+        border-top: 1px solid var(--border);
+        padding: 10px 16px;
+      }
+
+      .nav-links {
+        display: none;
+      }
+
+      .cmd-table td:first-child {
+        padding-right: 16px;
+        font-size: 0.8rem;
+      }
+
+      h2 {
+        font-size: 1.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav>
+    <div class="container">
+      <span class="nav-logo">nf</span>
+      <ul class="nav-links">
+        <li><a href="#how-it-works">how it works</a></li>
+        <li><a href="#commands">commands</a></li>
+        <li><a href="#why">why nf</a></li>
+        <li><a href="#install">install</a></li>
+        <li>
+          <a href="https://github.com/YOUR_USERNAME/nf" class="nav-github" target="_blank" rel="noopener">
+            <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+            GitHub
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="container">
+      <h1 class="hero-title animate-in">nf<span class="cursor"></span></h1>
+      <p class="hero-subtitle animate-in animate-delay-1">Note Fast.</p>
+      <p class="hero-desc animate-in animate-delay-2">
+        A single-command note tool for Linux.<br>
+        No cloud. No account. Just your terminal.
+      </p>
+      <div class="install-block animate-in animate-delay-3">
+        <span class="install-prefix">$</span>
+        <code class="install-cmd" id="hero-install-cmd">curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/nf/main/install.sh | bash</code>
+        <button class="copy-btn" onclick="copyInstall(this)" aria-label="Copy install command">copy</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- How it works -->
+  <section id="how-it-works">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step animate-in">
+          <div class="step-header">
+            <span class="step-num">1</span>
+            <span class="step-title">Learn a command</span>
+          </div>
+          <div class="code-block">
+            <p class="code-label">you just found this on stack overflow</p>
+            <pre><span class="prompt">$ </span><span class="cmd">fuser -k 3000/tcp</span>
+<span class="output">killed process on port 3000</span></pre>
+          </div>
+        </div>
+
+        <div class="step animate-in animate-delay-1">
+          <div class="step-header">
+            <span class="step-num">2</span>
+            <span class="step-title">Note it</span>
+          </div>
+          <div class="code-block">
+            <pre><span class="prompt">$ </span><span class="cmd">nf </span><span class="string">"fuser -k 3000/tcp — kills process on port 3000"</span>
+<span class="output">Note saved.</span></pre>
+          </div>
+        </div>
+
+        <div class="step animate-in animate-delay-2">
+          <div class="step-header">
+            <span class="step-num">3</span>
+            <span class="step-title">Find it later</span>
+          </div>
+          <div class="code-block">
+            <pre><span class="prompt">$ </span><span class="cmd">nf search </span><span class="flag">port</span>
+<span class="num"> 1</span>  <span class="date">2025-04-25</span>  <span class="output">fuser -k 3000/tcp — kills process on port 3000</span>
+<span class="num"> 3</span>  <span class="date">2025-04-25</span>  <span class="output">ss -tulpn | grep LISTEN — shows all listening ports</span></pre>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Commands -->
+  <section id="commands">
+    <div class="container">
+      <h2>Commands</h2>
+      <table class="cmd-table">
+        <tr>
+          <td>nf "text"</td>
+          <td>Save a new note</td>
+        </tr>
+        <tr>
+          <td>nf</td>
+          <td>Open TUI (requires fzf) or list notes</td>
+        </tr>
+        <tr>
+          <td>nf list</td>
+          <td>List all notes</td>
+        </tr>
+        <tr>
+          <td>nf search &lt;term&gt;</td>
+          <td>Search notes (case-insensitive)</td>
+        </tr>
+        <tr>
+          <td>nf del &lt;n&gt;</td>
+          <td>Delete a note by number</td>
+        </tr>
+        <tr>
+          <td>nf edit</td>
+          <td>Open notes in $EDITOR</td>
+        </tr>
+        <tr>
+          <td>nf count</td>
+          <td>Show total number of notes</td>
+        </tr>
+        <tr>
+          <td>nf help</td>
+          <td>Show help</td>
+        </tr>
+        <tr>
+          <td>nf version</td>
+          <td>Show version</td>
+        </tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- Why nf -->
+  <section id="why">
+    <div class="container">
+      <h2>Why nf</h2>
+      <ul class="why-list">
+        <li><strong>Fast.</strong> One command to save. One command to search. Under 3 seconds.</li>
+        <li><strong>Local.</strong> No cloud, no account, no internet required. Your notes never leave your machine.</li>
+        <li><strong>Plain text.</strong> Notes live in a single file at <code style="color:var(--accent2)">~/.local/share/nf/notes</code>. grep it, cat it, back it up.</li>
+        <li><strong>No setup.</strong> Install and use immediately. No config files, no databases, no init commands.</li>
+        <li><strong>Open source.</strong> MIT licensed. Fork it, extend it, make it yours.</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Install -->
+  <section id="install">
+    <div class="container">
+      <h2>Install</h2>
+
+      <div class="install-option">
+        <div class="install-option-label">
+          One-liner
+          <span class="tag">recommended</span>
+        </div>
+        <div class="code-block" style="display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 16px 20px;">
+          <pre style="margin:0;flex:1;overflow-x:auto"><span class="prompt">$ </span><span class="cmd" id="install-cmd-2">curl -sL https://raw.githubusercontent.com/YOUR_USERNAME/nf/main/install.sh | bash</span></pre>
+          <button class="copy-btn" onclick="copyInstall2(this)" style="border:none;border-left:1px solid var(--border);padding:8px 14px;margin:-16px -20px -16px 0;height:calc(100% + 32px);border-radius:0 7px 7px 0;" aria-label="Copy install command">copy</button>
+        </div>
+      </div>
+
+      <div class="install-option">
+        <div class="install-option-label">Manual</div>
+        <div class="code-block">
+          <pre><span class="prompt">$ </span><span class="cmd">git clone https://github.com/YOUR_USERNAME/nf.git</span>
+<span class="prompt">$ </span><span class="cmd">cd nf</span>
+<span class="prompt">$ </span><span class="cmd">chmod +x nf.sh</span>
+<span class="prompt">$ </span><span class="cmd">sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf</span></pre>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="https://github.com/YOUR_USERNAME/nf" target="_blank" rel="noopener">GitHub</a>
+        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/README.md" target="_blank" rel="noopener">Docs</a>
+        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">Contributing</a>
+        <a href="https://github.com/YOUR_USERNAME/nf/blob/main/LICENSE" target="_blank" rel="noopener">MIT License</a>
+      </div>
+      <p class="footer-tagline">Made for Linux users by a Linux user.</p>
+    </div>
+  </footer>
+
+  <script>
+    // Copy install command (hero)
+    function copyInstall(btn) {
+      const cmd = document.getElementById('hero-install-cmd').textContent;
+      navigator.clipboard.writeText(cmd).then(function() {
+        btn.textContent = 'copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Copy install command (install section)
+    function copyInstall2(btn) {
+      const cmd = document.getElementById('install-cmd-2').textContent;
+      navigator.clipboard.writeText(cmd).then(function() {
+        btn.textContent = 'copied!';
+        btn.classList.add('copied');
+        setTimeout(function() {
+          btn.textContent = 'copy';
+          btn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    // Intersection Observer for scroll animations
+    (function() {
+      var observer = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (entry.isIntersecting) {
+            entry.target.style.animationPlayState = 'running';
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      // Pause animations until visible (except hero which should animate immediately)
+      document.querySelectorAll('section:not(.hero) .animate-in').forEach(function(el) {
+        el.style.animationPlayState = 'paused';
+        observer.observe(el);
+      });
+    })();
+  </script>
+
+</body>
+</html>
