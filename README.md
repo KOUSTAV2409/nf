@@ -9,21 +9,30 @@ No cloud. No account. No setup. Just your terminal.
 
 ## Demo
 
+[![asciicast](https://asciinema.org/a/l2bcd2e4okUUKaNs.svg)](https://asciinema.org/a/l2bcd2e4okUUKaNs)
+
+<details>
+<summary>Text version</summary>
+
 ```bash
 $ nf "fuser -k 3000/tcp — kills process on port 3000"
 Note saved.
 
-$ nf "ss -tulpn | grep LISTEN — shows all listening ports"
-Note saved.
+$ nf search port
+ 1  2025-04-25  fuser -k 3000/tcp — kills process on port 3000
 
 $ nf list
  1  2025-04-25  fuser -k 3000/tcp — kills process on port 3000
- 2  2025-04-25  ss -tulpn | grep LISTEN — shows all listening ports
+ 2  2025-04-25  refactor auth module before friday
+ 3  2025-04-25  ssh-keygen -t ed25519 — generate modern ssh key
 
-$ nf search port
- 1  2025-04-25  fuser -k 3000/tcp — kills process on port 3000
- 2  2025-04-25  ss -tulpn | grep LISTEN — shows all listening ports
+$ nf del 2
+Deleted note 2.
+
+$ nf count
+2
 ```
+</details>
 
 ---
 
