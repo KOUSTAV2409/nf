@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # nf — Note Fast
-# A minimal Linux note-taking tool for the terminal
-# https://github.com/YOUR_USERNAME/nf
+# A minimal note-taking tool for the terminal (Linux & macOS)
+# https://github.com/KOUSTAV2409/nf
 # MIT License
 
 set -euo pipefail
@@ -154,7 +154,12 @@ nf_del() {
   echo "Deleting: \"$content\""
 
   # Delete the line using sed (in-place)
-  sed -i "${num}d" "$NF_FILE"
+  # BSD sed (macOS) requires an empty backup extension; GNU sed does not
+  if [[ "$OSTYPE" == darwin* ]]; then
+    sed -i '' "${num}d" "$NF_FILE"
+  else
+    sed -i "${num}d" "$NF_FILE"
+  fi
   echo "Deleted note $num."
 }
 
@@ -207,7 +212,10 @@ nf_tui() {
   if [ -n "$selected" ]; then
     local content
     content=$(echo "$selected" | sed 's/^[[:space:]]*[0-9]*[[:space:]]*[0-9-]*[[:space:]]*//')
-    if command -v xclip &>/dev/null; then
+    if command -v pbcopy &>/dev/null; then
+      echo -n "$content" | pbcopy
+      echo "Copied to clipboard."
+    elif command -v xclip &>/dev/null; then
       echo -n "$content" | xclip -selection clipboard
       echo "Copied to clipboard."
     elif command -v xsel &>/dev/null; then

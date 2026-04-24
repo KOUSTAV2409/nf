@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>nf — Note Fast</title>
-  <meta name="description" content="A single-command note tool for Linux. Capture commands instantly from your terminal.">
+  <meta name="description" content="A single-command note tool for Linux and macOS. Capture commands instantly from your terminal.">
   <link rel="icon" type="image/svg+xml" href="favicon.svg">
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
@@ -311,7 +311,7 @@
       <p class="tagline">
         You learn a command. You forget it next week.<br>
         nf saves it in one line and finds it later.<br>
-        No cloud. No setup. Plain text. That's it.
+        No cloud. No setup. Plain text. Linux & macOS.
       </p>
       <div class="install-bar">
         <code><span class="ps">$</span> <span id="cmd1">curl -sL https://nf.iamk.xyz/install | bash</span></code>
@@ -383,7 +383,7 @@
       <ul>
         <li><b>3 seconds.</b> That's the whole UX. Type nf, paste your note, done.</li>
         <li><b>One flat file.</b> Your notes live at <code style="color:var(--green)">~/.local/share/nf/notes</code>. It's just text. grep it, cat it, rsync it.</li>
-        <li><b>Zero dependencies.</b> Pure bash. No python, no node, no rust. Runs on any Linux box.</li>
+        <li><b>Zero dependencies.</b> Pure bash. No python, no node, no rust. Runs on any Linux or macOS box.</li>
         <li><b>No cloud.</b> Nothing leaves your machine. Ever.</li>
         <li><b>fzf optional.</b> If you have fzf installed, <code style="color:var(--green)">nf</code> opens a fuzzy TUI. If not, it just lists notes. Either way it works.</li>
       </ul>
@@ -414,7 +414,8 @@
         <pre><span class="c"># for TUI mode (fuzzy search)</span>
 <span class="p">$ </span>sudo apt install fzf     <span class="c"># debian/ubuntu</span>
 <span class="p">$ </span>sudo pacman -S fzf        <span class="c"># arch</span>
-<span class="p">$ </span>sudo dnf install fzf      <span class="c"># fedora</span></pre>
+<span class="p">$ </span>sudo dnf install fzf      <span class="c"># fedora</span>
+<span class="p">$ </span>brew install fzf           <span class="c"># macOS</span></pre>
       </div>
     </div>
   </section>

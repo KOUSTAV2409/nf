@@ -1,6 +1,6 @@
 # nf — Note Fast
 
-A minimal terminal note-taking tool for Linux.
+A minimal terminal note-taking tool for Linux and macOS.
 
 Capture a command or thought in one line. Find it later in seconds.
 No cloud. No account. No setup. Just your terminal.
@@ -38,7 +38,7 @@ curl -sL https://nf.iamk.xyz/install | bash
 **Manual:**
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/nf.git
+git clone https://github.com/KOUSTAV2409/nf.git
 cd nf
 chmod +x nf.sh
 sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf
