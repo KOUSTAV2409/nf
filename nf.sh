@@ -374,6 +374,7 @@ Usage:
   nf                Open TUI (requires fzf) or list notes
   nf list           List all notes
   nf search <term>  Search notes (case-insensitive)
+  nf find <term>    Alias for search
   nf del <number>   Delete a note by number
   nf edit           Interactive menu to manage notes
   nf count          Show total number of notes
@@ -413,7 +414,7 @@ main() {
     list)
       nf_list
       ;;
-    search)
+    search|find)
       nf_search "${2:-}"
       ;;
     del|delete|rm)
