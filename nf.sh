@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.1.0"
+NF_VERSION="0.2.0"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -163,12 +163,104 @@ nf_del() {
   echo "Deleted note $num."
 }
 
-# Open the notes file in the user's preferred editor
-nf_edit() {
-  nf_ensure_storage
-  # Create the file if it doesn't exist so the editor doesn't complain
-  touch "$NF_FILE"
+# Interactive fzf menu for managing notes
+nf_edit_fzf() {
+  while true; do
+    clear
+    echo -e "${C_BOLD}Edit mode — Select an action${C_RESET}"
+    echo "--------------------------------"
+    local choice
+    choice=$(echo -e "📝 Add new note\n🗑️  Delete note\n👁️  View all notes\n📂 Edit raw file\n❌ Quit" | fzf \
+      --prompt="action > " \
+      --height=15 \
+      --border \
+      --no-info \
+      --header="Use arrows to select, Enter to confirm") || return 0
 
+    case "$choice" in
+      *"Add new note"*)
+        echo -n "Enter note: "
+        read -r new_note
+        [ -n "$new_note" ] && nf_add "$new_note"
+        echo -e "\nPress Enter to continue..."
+        read -r
+        ;;
+      *"Delete note"*)
+        local to_del
+        to_del=$(nf_list_raw | fzf --prompt="delete > " --header="Select note to delete" --height=15)
+        if [ -n "$to_del" ]; then
+          nf_del "$(echo "$to_del" | awk '{print $1}')"
+          echo -e "\nPress Enter to continue..."
+          read -r
+        fi
+        ;;
+      *"View all notes"*)
+        clear
+        nf_list
+        echo -e "\nPress Enter to return to menu..."
+        read -r
+        ;;
+      *"Edit raw file"*)
+        nf_edit_raw
+        ;;
+      *"Quit"*)
+        return 0
+        ;;
+    esac
+  done
+}
+
+# Fallback bash menu for systems without fzf
+nf_edit_menu() {
+  while true; do
+    clear
+    echo -e "${C_BOLD}Edit mode — Select an action${C_RESET}"
+    echo "--------------------------------"
+    echo "1) 📝 Add new note"
+    echo "2) 🗑️  Delete note"
+    echo "3) 👁️  View all notes"
+    echo "4) 📂 Edit raw file"
+    echo "5) ❌ Quit"
+    echo ""
+    echo -n "Choice [1-5]: "
+    read -r choice
+
+    case "$choice" in
+      1)
+        echo -n "Enter note: "
+        read -r new_note
+        [ -n "$new_note" ] && nf_add "$new_note"
+        echo -e "\nPress Enter to continue..."
+        read -r
+        ;;
+      2)
+        nf_list
+        echo -n "Note number to delete: "
+        read -r num
+        [ -n "$num" ] && nf_del "$num"
+        echo -e "\nPress Enter to continue..."
+        read -r
+        ;;
+      3)
+        clear
+        nf_list
+        echo -e "\nPress Enter to return to menu..."
+        read -r
+        ;;
+      4)
+        nf_edit_raw
+        ;;
+      5|q|Q)
+        return 0
+        ;;
+    esac
+  done
+}
+
+# Original edit logic as fallback
+nf_edit_raw() {
+  nf_ensure_storage
+  touch "$NF_FILE"
   if [ -n "${EDITOR:-}" ]; then
     "$EDITOR" "$NF_FILE"
   elif command -v nano &>/dev/null; then
@@ -178,6 +270,15 @@ nf_edit() {
   else
     echo "No editor found. Set \$EDITOR or install nano/vi."
     return 1
+  fi
+}
+
+# Dispatcher for edit mode
+nf_edit() {
+  if command -v fzf &>/dev/null; then
+    nf_edit_fzf
+  else
+    nf_edit_menu
   fi
 }
 
@@ -234,7 +335,7 @@ nf_tui() {
 nf_help() {
   cat <<EOF
 nf — Note Fast (v$NF_VERSION)
-A minimal terminal note-taking tool for Linux.
+A minimal terminal note-taking tool for Linux & macOS.
 
 Usage:
   nf "text"         Save a new note
@@ -242,13 +343,28 @@ Usage:
   nf list           List all notes
   nf search <term>  Search notes (case-insensitive)
   nf del <number>   Delete a note by number
-  nf edit           Open notes in \$EDITOR
+  nf edit           Interactive menu to manage notes
   nf count          Show total number of notes
+  nf update         Check for updates and upgrade
   nf help           Show this help
   nf version        Show version
 
 Notes are stored at: $NF_FILE
 EOF
+}
+
+# Update nf to latest version from web
+nf_update() {
+  echo "🔄 Updating nf to latest version..."
+  if curl -sL https://nf.iamk.xyz/install | bash; then
+    # Use $BASH instead of $SHELL to be safe about the current binary
+    local new_ver
+    new_ver=$(nf version 2>/dev/null | awk '{print $2}' || echo "unknown")
+    echo -e "${C_GREEN}✅ Update complete! You're now on: v$new_ver${C_RESET}"
+  else
+    echo -e "${C_RED}❌ Update failed.${C_RESET} Try: curl -sL https://nf.iamk.xyz/install | bash"
+    return 1
+  fi
 }
 
 # --- main command dispatcher ---
@@ -276,6 +392,9 @@ main() {
       ;;
     count)
       nf_count
+      ;;
+    update|--update|-u)
+      nf_update
       ;;
     help|--help|-h)
       nf_help

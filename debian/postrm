@@ -1,0 +1,4 @@
+#!/bin/sh
+set -e
+# Cleanup logic if needed
+exit 0
