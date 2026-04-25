@@ -98,6 +98,7 @@ nf update
 | `nf` | Open TUI (requires fzf) or list notes |
 | `nf list` | List all notes |
 | `nf search <term>` | Search notes (case-insensitive) |
+| `nf find <term>` | Alias for search |
 | `nf del <number>` | Delete a note by number |
 | `nf edit` | Interactive menu to manage notes |
 | `nf count` | Show total number of notes |
