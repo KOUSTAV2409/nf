@@ -259,20 +259,49 @@ nf_edit_menu() {
   done
 }
 
-# Original edit logic as fallback
+# Original edit logic with UX improvements
 nf_edit_raw() {
   nf_ensure_storage
   touch "$NF_FILE"
-  if [ -n "${EDITOR:-}" ]; then
-    "$EDITOR" "$NF_FILE"
-  elif command -v nano &>/dev/null; then
-    nano "$NF_FILE"
-  elif command -v vi &>/dev/null; then
-    vi "$NF_FILE"
-  else
-    echo "No editor found. Set \$EDITOR or install nano/vi."
+
+  local lockfile="$NF_DIR/.lock"
+  if [ -f "$lockfile" ]; then
+    echo -e "${C_RED}⚠ Notes are already being edited in another window.${C_RESET}"
+    echo "Please close that session first or delete $lockfile if this is an error."
+    echo -e "\nPress Enter to continue..."
+    read -r
     return 1
   fi
+
+  # Create lock and ensure cleanup
+  touch "$lockfile"
+  trap 'rm -f "$lockfile"' EXIT INT TERM
+
+  local editor="${EDITOR:-}"
+  if [ -z "$editor" ]; then
+    if command -v nano &>/dev/null; then editor="nano";
+    elif command -v vi &>/dev/null; then editor="vi";
+    else
+      echo "No editor found. Set \$EDITOR or install nano/vi."
+      rm -f "$lockfile"
+      return 1
+    fi
+  fi
+
+  # Optimization: Use -n for vim/nvim and inject a persistent statusline guide
+  if [[ "$editor" == *"vim"* ]] || [[ "$editor" == *"nvim"* ]]; then
+    "$editor" -n \
+      -c "set laststatus=2" \
+      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Insert\ \ \ Esc\ :wq=Save/Exit\ \ \ :q!=Quit\ " \
+      "$NF_FILE"
+  elif [[ "$editor" == *"nano"* ]]; then
+    "$editor" "$NF_FILE"
+  else
+    "$editor" "$NF_FILE"
+  fi
+
+  rm -f "$lockfile"
+  trap - EXIT INT TERM
 }
 
 # Dispatcher for edit mode
