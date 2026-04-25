@@ -189,7 +189,9 @@ nf_edit_fzf() {
         local to_del
         to_del=$(nf_list_raw | fzf --prompt="delete > " --header="Select note to delete" --height=15)
         if [ -n "$to_del" ]; then
-          nf_del "$(echo "$to_del" | awk '{print $1}')"
+          local to_del_num
+          read -r to_del_num _ <<< "$to_del"
+          nf_del "$to_del_num"
           echo -e "\nPress Enter to continue..."
           read -r
         fi
@@ -311,8 +313,9 @@ nf_tui() {
 
   # On selection, copy the note content (without number and date) to clipboard
   if [ -n "$selected" ]; then
-    local content
-    content=$(echo "$selected" | sed 's/^[[:space:]]*[0-9]*[[:space:]]*[0-9-]*[[:space:]]*//')
+    local _num _date content
+    # selected is "num  date  content"
+    read -r _num _date content <<< "$selected"
     if command -v pbcopy &>/dev/null; then
       echo -n "$content" | pbcopy
       echo "Copied to clipboard."
