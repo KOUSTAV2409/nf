@@ -1,0 +1,6 @@
+#!/bin/sh
+set -e
+# Create storage directory for all users if it doesn't exist
+# Note: nf.sh creates this in ~/.local/share/nf by default,
+# but we can ensure the parent structure is friendly.
+exit 0

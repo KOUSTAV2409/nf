@@ -1,0 +1,11 @@
+Package: nf
+Version: 0.1.0-1
+Section: utils
+Priority: optional
+Architecture: all
+Maintainer: Your Name <your.email@example.com>
+Homepage: https://nf.iamk.xyz
+Description: Minimal terminal note-taking tool
+ Note Fast is a minimal, fast, Linux-native command-line note-taking tool
+ written in pure Bash. It is designed for capturing commands or thoughts
+ instantly.

@@ -1,5 +1,10 @@
 # nf — Note Fast
 
+![Version](https://img.shields.io/github/v/release/KOUSTAV2409/nf?label=version&color=4ae68a)
+![License](https://img.shields.io/github/license/KOUSTAV2409/nf?color=4ae68a)
+![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
+
+
 A minimal terminal note-taking tool for Linux and macOS.
 
 Capture a command, a thought, or a snippet in one line. Find it later in seconds.
@@ -38,7 +43,14 @@ $ nf count
 
 ## Install
 
-**One-liner:**
+**Package managers (recommended):**
+
+- **macOS:** `brew install nf` (coming soon)
+- **Arch Linux (AUR):** `yay -S nf` (coming soon)
+- **Ubuntu/Debian:** `sudo apt install nf` (coming soon)
+- **Fedora:** `sudo dnf install nf` (coming soon)
+
+**One-liner (universal):**
 
 ```bash
 curl -sL https://nf.iamk.xyz/install | bash
@@ -55,6 +67,29 @@ sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf
 
 ---
 
+## Update
+
+If you installed via a package manager:
+
+```bash
+# macOS
+brew upgrade nf
+
+# Arch
+yay -Syu nf
+
+# Ubuntu/Debian
+sudo apt update && sudo apt upgrade
+```
+
+If you installed via the one-liner or manually:
+
+```bash
+nf update
+```
+
+---
+
 ## Usage
 
 | Command | Description |
@@ -64,7 +99,7 @@ sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf
 | `nf list` | List all notes |
 | `nf search <term>` | Search notes (case-insensitive) |
 | `nf del <number>` | Delete a note by number |
-| `nf edit` | Open notes in `$EDITOR` |
+| `nf edit` | Interactive menu to manage notes |
 | `nf count` | Show total number of notes |
 | `nf help` | Show help |
 | `nf version` | Show version |
