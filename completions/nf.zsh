@@ -1,7 +1,9 @@
-#compdef nf
+# shellcheck shell=bash
+# compdef nf
 # Zsh completion for nf
 
 _nf() {
+  # shellcheck disable=SC2034
   local -a commands
   commands=(
     'list:List all notes'
