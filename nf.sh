@@ -303,11 +303,13 @@ nf_edit_raw() {
     
     "$editor" -n \
       -c "set laststatus=2" \
-      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Start\ Writing\ \ \ Ctrl+S=Save\ \ \ Ctrl+Q=Quit\ " \
+      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Write\ \ \ Ctrl+S=Save\ \ \ Ctrl+D=Delete\ Line\ \ \ Ctrl+Q=Quit\ " \
       -c "noremap <C-s> :w<CR>" \
       -c "inoremap <C-s> <Esc>:w<CR>a" \
       -c "noremap <C-q> :q<CR>" \
       -c "inoremap <C-q> <Esc>:q<CR>" \
+      -c "noremap <C-d> dd" \
+      -c "inoremap <C-d> <Esc>dda" \
       "$NF_FILE"
     
     # Re-enable flow control
