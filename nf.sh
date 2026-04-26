@@ -266,15 +266,23 @@ nf_edit_raw() {
 
   local lockfile="$NF_DIR/.lock"
   if [ -f "$lockfile" ]; then
-    echo -e "${C_RED}⚠ Notes are already being edited in another window.${C_RESET}"
-    echo "Please close that session first or delete $lockfile if this is an error."
-    echo -e "\nPress Enter to continue..."
-    read -r
-    return 1
+    local locking_pid
+    locking_pid=$(cat "$lockfile" 2>/dev/null || echo "")
+    # Check if the process that created the lock is still alive
+    if [ -n "$locking_pid" ] && kill -0 "$locking_pid" 2>/dev/null; then
+      echo -e "${C_RED}⚠ Notes are already being edited by process $locking_pid.${C_RESET}"
+      echo "Please close that session first."
+      echo -e "\nPress Enter to continue..."
+      read -r
+      return 1
+    else
+      # Stale lock detected (process is dead) - remove it
+      rm -f "$lockfile"
+    fi
   fi
 
-  # Create lock and ensure cleanup
-  touch "$lockfile"
+  # Create lock with current PID and ensure cleanup
+  echo "$$" > "$lockfile"
   trap 'rm -f "$lockfile"' EXIT INT TERM
 
   local editor="${EDITOR:-}"
