@@ -25,16 +25,29 @@ fi
 # --- Tab Completion Setup ---
 echo "Setting up tab completion..."
 # Bash
-if [ -d "/etc/bash_completion.d" ]; then
-  curl -sL "$REPO/completions/nf.bash" | sudo tee /etc/bash_completion.d/nf > /dev/null
-elif [ -d "/usr/local/etc/bash_completion.d" ]; then
-  curl -sL "$REPO/completions/nf.bash" | sudo tee /usr/local/etc/bash_completion.d/nf > /dev/null
+BASH_COMP_DIR=""
+for dir in "/etc/bash_completion.d" "/usr/local/etc/bash_completion.d"; do
+  if [ -d "$dir" ]; then BASH_COMP_DIR="$dir"; break; fi
+done
+
+if [ -n "$BASH_COMP_DIR" ]; then
+  curl -sL "$REPO/completions/nf.bash" | sudo tee "$BASH_COMP_DIR/nf" > /dev/null
 fi
 
 # Zsh
-ZSH_COMP_DIR="/usr/local/share/zsh/site-functions"
-sudo mkdir -p "$ZSH_COMP_DIR"
-curl -sL "$REPO/completions/nf.zsh" | sudo tee "$ZSH_COMP_DIR/_nf" > /dev/null
+ZSH_COMP_DIR=""
+for dir in "/usr/local/share/zsh/site-functions" "/usr/share/zsh/site-functions" "/usr/share/zsh/vendor-completions"; do
+  if [ -d "$dir" ]; then ZSH_COMP_DIR="$dir"; break; fi
+done
+
+if [ -n "$ZSH_COMP_DIR" ]; then
+  sudo mkdir -p "$ZSH_COMP_DIR"
+  curl -sL "$REPO/completions/nf.zsh" | sudo tee "$ZSH_COMP_DIR/_nf" > /dev/null
+else
+  # If no system dir, suggest local source
+  echo "  Note: System completion folder not found. Adding to ~/.zshrc..."
+  grep -q "nf.zsh" ~/.zshrc 2>/dev/null || echo "source <(curl -sL $REPO/completions/nf.zsh)" >> ~/.zshrc
+fi
 
 echo ""
 echo "✓ nf installed successfully!"

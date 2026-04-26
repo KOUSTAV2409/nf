@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.2.4"
+NF_VERSION="0.2.5"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
