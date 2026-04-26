@@ -34,7 +34,30 @@
     .dim { color: var(--dim); }
     hr { border: 0; border-top: 1px solid var(--border); margin: 40px 0; }
     .quote { border-left: 2px solid var(--green); padding-left: 20px; font-style: italic; color: #fff; margin: 40px 0; }
-    footer { margin-top: 80px; font-size: 12px; color: var(--dim); }
+    a { color: var(--green); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 32px 0;
+      margin-top: 80px;
+    }
+    footer .w {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .foot-left { color: var(--dim); font-size: 12px; }
+    .foot-right { display: flex; gap: 16px; }
+    .foot-right a { color: var(--dim); font-size: 12px; text-decoration: none; }
+    .foot-right a:hover { color: var(--text); text-decoration: none; }
+
+    /* ---- responsive ---- */
+    @media (max-width: 520px) {
+      footer .w { flex-direction: column; text-align: center; }
+    }
   </style>
 </head>
 <body>
@@ -69,7 +92,14 @@
     </main>
 
     <footer>
-      &copy; 2025 nf. Keep it fast.
+      <div class="w">
+        <span class="foot-left">MIT — built by <a href="https://iamk.xyz" target="_blank" rel="noopener">iamk.xyz</a></span>
+        <div class="foot-right">
+          <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+          <a href="https://github.com/KOUSTAV2409/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing</a>
+          <a href="https://github.com/KOUSTAV2409/nf/blob/main/LICENSE" target="_blank" rel="noopener">license</a>
+        </div>
+      </div>
     </footer>
   </div>
 </body>
