@@ -296,12 +296,22 @@ nf_edit_raw() {
     fi
   fi
 
-  # Optimization: Use -n for vim/nvim and inject a persistent statusline guide
+  # Optimization: Use -n for vim/nvim and inject modern shortcuts + persistent guide
   if [[ "$editor" == *"vim"* ]] || [[ "$editor" == *"nvim"* ]]; then
+    # Disable terminal flow control so Ctrl+S works for saving
+    stty -ixon 2>/dev/null || true
+    
     "$editor" -n \
       -c "set laststatus=2" \
-      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Insert\ \ \ Esc\ :wq=Save/Exit\ \ \ :q!=Quit\ " \
+      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Start\ Writing\ \ \ Ctrl+S=Save\ \ \ Ctrl+Q=Quit\ " \
+      -c "noremap <C-s> :w<CR>" \
+      -c "inoremap <C-s> <Esc>:w<CR>a" \
+      -c "noremap <C-q> :q<CR>" \
+      -c "inoremap <C-q> <Esc>:q<CR>" \
       "$NF_FILE"
+    
+    # Re-enable flow control
+    stty ixon 2>/dev/null || true
   elif [[ "$editor" == *"nano"* ]]; then
     "$editor" "$NF_FILE"
   else
