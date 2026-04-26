@@ -1,6 +1,6 @@
+#compdef nf
 # shellcheck shell=bash
 # shellcheck disable=SC2034
-# compdef nf
 # Zsh completion for nf
 
 _nf() {

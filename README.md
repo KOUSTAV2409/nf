@@ -1,6 +1,6 @@
 # nf — Note Fast
 
-![Version](https://img.shields.io/badge/version-0.2.3-blue.svg)
+![Version](https://img.shields.io/badge/version-0.2.4-blue.svg)
 ![License](https://img.shields.io/github/license/KOUSTAV2409/nf?color=4ae68a)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
 
