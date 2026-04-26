@@ -1,8 +1,8 @@
-nf v0.2.3 — The "Out-of-the-Box" Update
+nf v0.2.4 — The "Zsh Harmony" Update
 
 ✨ What's New:
+- 🛠️ Zsh Completion Fix: Tab completion now works perfectly in Zsh out-of-the-box.
 - ⚡ Automated Tab Completion: No setup needed! It now installs automatically.
-- 💡 Visual Search: Results now highlight your search term in bold yellow.
 - 🚀 Auto-update: Use 'nf update' to stay current.
 - 📂 Interactive Edit: A guided menu for managing notes (nf edit).
 - ⌨️ Modern Shortcuts: Use Ctrl+S to Save and Ctrl+Q to Quit in Vim.
