@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.2.9"
+NF_VERSION="0.3.0"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -21,8 +21,9 @@ if [ -t 1 ] && command -v tput &>/dev/null && [ "$(tput colors 2>/dev/null)" -ge
   C_GREEN='\033[32m'   # green for success messages
   C_RED='\033[31m'     # red for errors
   C_BOLD='\033[1m'     # bold
+  C_DIM='\033[2m'      # dim text
 else
-  C_NUM='' C_DATE='' C_TEXT='' C_RESET='' C_GREEN='' C_RED='' C_BOLD=''
+  C_NUM='' C_DATE='' C_TEXT='' C_RESET='' C_GREEN='' C_RED='' C_BOLD='' C_DIM=''
 fi
 
 # --- ensure storage ---
@@ -320,6 +321,9 @@ nf_edit_raw() {
   elif [[ "$editor" == *"nano"* ]]; then
     "$editor" "$NF_FILE"
   else
+    # For other editors, show helpful message
+    echo -e "${C_GREEN}Opening editor...${C_RESET}"
+    echo -e "${C_DIM}Tip: Save and close when done. Your changes will be saved automatically.${C_RESET}"
     "$editor" "$NF_FILE"
   fi
 
