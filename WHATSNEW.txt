@@ -1,4 +1,4 @@
-nf v0.2.4 — The "Zsh Harmony" Update
+nf v0.2.5 — The "Smarter Installer" Update
 
 ✨ What's New:
 - 🛠️ Zsh Completion Fix: Tab completion now works perfectly in Zsh out-of-the-box.
