@@ -1,8 +1,8 @@
-nf v0.2.9 — The "Intuition" Update
+nf v0.3.0 — The Interactive Release
 
 ✨ What's New:
-- 🛠️ Zsh Completion Fix: Tab completion now works perfectly in Zsh out-of-the-box.
-- ⚡ Automated Tab Completion: No setup needed! It now installs automatically.
-- 🚀 Auto-update: Use 'nf update' to stay current.
-- 📂 Interactive Edit: A guided menu for managing notes (nf edit).
-- ⌨️ Modern Shortcuts: Use Ctrl+S to Save and Ctrl+Q to Quit in Vim.
+- ⌨️ Modern Editor Shortcuts: Use Ctrl+S to Save, Ctrl+D to Delete Line, and Ctrl+Q to Quit (Vim/Nvim).
+- 🔒 Data Protection: Added lock-file support to prevent accidental overwrites during multi-terminal edits.
+- 🎨 Search Highlighting: Search results now highlight your matched terms in bold yellow.
+- 💡 Smart Editor Fallback: Better instructions and tips for non-Vim/Nano users.
+- 🚀 Zero-Friction Branding: Local-first, plain text, and 100% data ownership front-and-center.
