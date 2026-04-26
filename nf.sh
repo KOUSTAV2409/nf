@@ -266,15 +266,23 @@ nf_edit_raw() {
 
   local lockfile="$NF_DIR/.lock"
   if [ -f "$lockfile" ]; then
-    echo -e "${C_RED}⚠ Notes are already being edited in another window.${C_RESET}"
-    echo "Please close that session first or delete $lockfile if this is an error."
-    echo -e "\nPress Enter to continue..."
-    read -r
-    return 1
+    local locking_pid
+    locking_pid=$(cat "$lockfile" 2>/dev/null || echo "")
+    # Check if the process that created the lock is still alive
+    if [ -n "$locking_pid" ] && kill -0 "$locking_pid" 2>/dev/null; then
+      echo -e "${C_RED}⚠ Notes are already being edited by process $locking_pid.${C_RESET}"
+      echo "Please close that session first."
+      echo -e "\nPress Enter to continue..."
+      read -r
+      return 1
+    else
+      # Stale lock detected (process is dead) - remove it
+      rm -f "$lockfile"
+    fi
   fi
 
-  # Create lock and ensure cleanup
-  touch "$lockfile"
+  # Create lock with current PID and ensure cleanup
+  echo "$$" > "$lockfile"
   trap 'rm -f "$lockfile"' EXIT INT TERM
 
   local editor="${EDITOR:-}"
@@ -288,12 +296,24 @@ nf_edit_raw() {
     fi
   fi
 
-  # Optimization: Use -n for vim/nvim and inject a persistent statusline guide
+  # Optimization: Use -n for vim/nvim and inject modern shortcuts + persistent guide
   if [[ "$editor" == *"vim"* ]] || [[ "$editor" == *"nvim"* ]]; then
+    # Disable terminal flow control so Ctrl+S works for saving
+    stty -ixon 2>/dev/null || true
+    
     "$editor" -n \
       -c "set laststatus=2" \
-      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Insert\ \ \ Esc\ :wq=Save/Exit\ \ \ :q!=Quit\ " \
+      -c "set statusline=%#PmenuSel#\ NF\ Guide:\ i=Write\ \ \ Ctrl+S=Save\ \ \ Ctrl+D=Delete\ Line\ \ \ Ctrl+Q=Quit\ " \
+      -c "noremap <C-s> :w<CR>" \
+      -c "inoremap <C-s> <Esc>:w<CR>a" \
+      -c "noremap <C-q> :q<CR>" \
+      -c "inoremap <C-q> <Esc>:q<CR>" \
+      -c "noremap <C-d> dd" \
+      -c "inoremap <C-d> <Esc>dda" \
       "$NF_FILE"
+    
+    # Re-enable flow control
+    stty ixon 2>/dev/null || true
   elif [[ "$editor" == *"nano"* ]]; then
     "$editor" "$NF_FILE"
   else
