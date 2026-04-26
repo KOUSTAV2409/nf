@@ -24,4 +24,11 @@ _nf() {
   fi
 }
 
-_nf "$@"
+# Only register if we are in Zsh and only if not already defined
+if [[ -n "$ZSH_VERSION" ]]; then
+  # If compdef is missing, try to load it quietly
+  if ! command -v compdef >/dev/null; then
+    autoload -Uz compinit && compinit -u
+  fi
+  compdef _nf nf
+fi
