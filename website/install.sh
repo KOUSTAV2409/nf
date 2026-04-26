@@ -22,36 +22,30 @@ else
   sudo mv "/tmp/nf_install.sh" "$INSTALL_DIR/$SCRIPT"
 fi
 
-# --- Tab Completion Setup ---
+# --- Tab Completion Setup (The "Bulletproof" Way) ---
 echo "Setting up tab completion..."
-# Bash
-BASH_COMP_DIR=""
-for dir in "/etc/bash_completion.d" "/usr/local/etc/bash_completion.d"; do
-  if [ -d "$dir" ]; then BASH_COMP_DIR="$dir"; break; fi
-done
+COMP_DIR="$HOME/.local/share/nf/completions"
+mkdir -p "$COMP_DIR"
+curl -sL "$REPO/completions/nf.bash" -o "$COMP_DIR/nf.bash"
+curl -sL "$REPO/completions/nf.zsh" -o "$COMP_DIR/nf.zsh"
 
-if [ -n "$BASH_COMP_DIR" ]; then
-  curl -sL "$REPO/completions/nf.bash" | sudo tee "$BASH_COMP_DIR/nf" > /dev/null
+# Add to .bashrc
+if [ -f "$HOME/.bashrc" ]; then
+  if ! grep -q "nf.bash" "$HOME/.bashrc"; then
+    echo -e "\n# nf tab completion\n[ -f \"$COMP_DIR/nf.bash\" ] && source \"$COMP_DIR/nf.bash\"" >> "$HOME/.bashrc"
+  fi
 fi
 
-# Zsh
-ZSH_COMP_DIR=""
-for dir in "/usr/local/share/zsh/site-functions" "/usr/share/zsh/site-functions" "/usr/share/zsh/vendor-completions"; do
-  if [ -d "$dir" ]; then ZSH_COMP_DIR="$dir"; break; fi
-done
-
-if [ -n "$ZSH_COMP_DIR" ]; then
-  sudo mkdir -p "$ZSH_COMP_DIR"
-  curl -sL "$REPO/completions/nf.zsh" | sudo tee "$ZSH_COMP_DIR/_nf" > /dev/null
-else
-  # If no system dir, suggest local source
-  echo "  Note: System completion folder not found. Adding to ~/.zshrc..."
-  grep -q "nf.zsh" ~/.zshrc 2>/dev/null || echo "source <(curl -sL $REPO/completions/nf.zsh)" >> ~/.zshrc
+# Add to .zshrc
+if [ -f "$HOME/.zshrc" ]; then
+  if ! grep -q "nf.zsh" "$HOME/.zshrc"; then
+    echo -e "\n# nf tab completion\n[ -f \"$COMP_DIR/nf.zsh\" ] && source \"$COMP_DIR/nf.zsh\"" >> "$HOME/.zshrc"
+  fi
 fi
 
 echo ""
 echo "✓ nf installed successfully!"
 echo "  Run: nf \"your first note\""
-echo "  Note: Restart your terminal or run 'source ~/.bashrc' for tab completion."
+echo "  Note: Close and REOPEN your terminal to activate tab completion."
 echo ""
 echo "Optional: install fzf for TUI mode (apt install fzf / brew install fzf)"
