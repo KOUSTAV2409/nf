@@ -4,7 +4,7 @@ _nf_completions() {
   local commands="list search find del delete rm edit count update help version"
   
   if [[ ${COMP_CWORD} -eq 1 ]]; then
-    COMPREPLY=( $(compgen -W "${commands}" -- "${cur}") )
+    mapfile -t COMPREPLY < <(compgen -W "${commands}" -- "${cur}")
   fi
 }
 complete -F _nf_completions nf
