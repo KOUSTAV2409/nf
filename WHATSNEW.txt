@@ -1,0 +1,9 @@
+nf v0.2.1 — The "Zero-Friction" Update
+
+✨ What's New:
+- 🚀 Auto-update: Use 'nf update' to stay current.
+- 📂 Interactive Edit: A guided menu for managing notes (nf edit).
+- ⌨️ Modern Shortcuts: Use Ctrl+S to Save and Ctrl+Q to Quit in Vim.
+- 🔍 New Alias: 'nf find' now works exactly like 'nf search'.
+- 🛡️ Safe Editing: Added locking to prevent note corruption.
+- 🐧 Better Portability: Full support for Linux and macOS.
