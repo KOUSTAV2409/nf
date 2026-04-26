@@ -1,4 +1,4 @@
-nf v0.2.8 — The "Invisible & Fast" Update
+nf v0.2.9 — The "Intuition" Update
 
 ✨ What's New:
 - 🛠️ Zsh Completion Fix: Tab completion now works perfectly in Zsh out-of-the-box.

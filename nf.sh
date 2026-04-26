@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.2.8"
+NF_VERSION="0.2.9"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -86,17 +86,18 @@ nf_list_raw() {
 
 # Case-insensitive search through notes
 nf_search() {
-  if [ -z "${1:-}" ]; then
-    echo "Usage: nf search <term>"
+  local cmd_name="${1:-search}"
+  local term="${2:-}"
+  if [ -z "$term" ]; then
+    echo "Usage: nf $cmd_name <term>"
     return 1
   fi
 
   if [ ! -f "$NF_FILE" ] || [ ! -s "$NF_FILE" ]; then
-    echo "No notes matching \"$1\"."
+    echo "No notes matching \"$term\"."
     return
   fi
 
-  local term="$1"
   local total line_num date content found=0
   total=$(wc -l < "$NF_FILE")
   local width=${#total}
@@ -470,7 +471,7 @@ main() {
       nf_check_for_updates
       ;;
     search|find)
-      nf_search "${2:-}"
+      nf_search "$1" "${2:-}"
       ;;
     del|delete|rm)
       nf_del "${2:-}"
