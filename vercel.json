@@ -1,6 +1,7 @@
 {
   "rewrites": [
     { "source": "/install", "destination": "/website/install.sh" },
+    { "source": "/completions/:path*", "destination": "/completions/:path*" },
     { "source": "/favicon.svg", "destination": "/website/favicon.svg" },
     { "source": "/", "destination": "/website/index.html" },
     { "source": "/:path*", "destination": "/website/:path*" }

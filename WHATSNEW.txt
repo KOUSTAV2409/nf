@@ -1,9 +1,8 @@
-nf v0.2.1 — The "Zero-Friction" Update
+nf v0.2.2 — The "Fucking Smooth" Update
 
 ✨ What's New:
+- 💡 Visual Search: Results now highlight your search term in bold yellow!
+- ⚡ Tab Completion: Added auto-completion for Bash and Zsh.
 - 🚀 Auto-update: Use 'nf update' to stay current.
 - 📂 Interactive Edit: A guided menu for managing notes (nf edit).
 - ⌨️ Modern Shortcuts: Use Ctrl+S to Save and Ctrl+Q to Quit in Vim.
-- 🔍 New Alias: 'nf find' now works exactly like 'nf search'.
-- 🛡️ Safe Editing: Added locking to prevent note corruption.
-- 🐧 Better Portability: Full support for Linux and macOS.
