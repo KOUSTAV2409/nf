@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.2.0"
+NF_VERSION="0.2.1"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -402,18 +402,49 @@ Usage:
   nf help           Show this help
   nf version        Show version
 
-Notes are stored at: $NF_FILE
+  Notes are stored at: $NF_FILE
 EOF
+}
+
+# Check for updates subtly (max once per day)
+nf_check_for_updates() {
+  nf_ensure_storage
+  local check_file="$NF_DIR/.last_check"
+  local now
+  now=$(date +%s)
+  
+  # Only check once every 24 hours (86400 seconds)
+  if [ -f "$check_file" ]; then
+    local last_check
+    last_check=$(cat "$check_file")
+    # Basic math check for bash
+    if [ "$((now - last_check))" -lt 86400 ]; then
+      return
+    fi
+  fi
+  
+  # Save current check time
+  echo "$now" > "$check_file"
+  
+  # Fast check: Fetch version from repo (background-ish with short timeout)
+  local remote_ver
+  remote_ver=$(curl -sL --connect-timeout 2 "https://raw.githubusercontent.com/KOUSTAV2409/nf/main/nf.sh" | grep "NF_VERSION=" | head -1 | cut -d'"' -f2 || echo "")
+  
+  if [ -n "$remote_ver" ] && [ "$remote_ver" != "$NF_VERSION" ]; then
+    echo -e "\n${C_DIM}💡 A new version of nf (v$remote_ver) is available. Run 'nf update' to upgrade.${C_RESET}"
+  fi
 }
 
 # Update nf to latest version from web
 nf_update() {
   echo "🔄 Updating nf to latest version..."
   if curl -sL https://nf.iamk.xyz/install | bash; then
-    # Use $BASH instead of $SHELL to be safe about the current binary
-    local new_ver
-    new_ver=$(nf version 2>/dev/null | awk '{print $2}' || echo "unknown")
-    echo -e "${C_GREEN}✅ Update complete! You're now on: v$new_ver${C_RESET}"
+    echo -e "${C_GREEN}✅ Update complete!${C_RESET}\n"
+    
+    # Show what's new
+    echo -e "${C_BOLD}What's New:${C_RESET}"
+    curl -sL --connect-timeout 5 "https://raw.githubusercontent.com/KOUSTAV2409/nf/main/WHATSNEW.txt" || echo "Check github.com/KOUSTAV2409/nf for details."
+    echo ""
   else
     echo -e "${C_RED}❌ Update failed.${C_RESET} Try: curl -sL https://nf.iamk.xyz/install | bash"
     return 1
@@ -430,9 +461,11 @@ main() {
       else
         nf_list
       fi
+      nf_check_for_updates
       ;;
     list)
       nf_list
+      nf_check_for_updates
       ;;
     search|find)
       nf_search "${2:-}"
