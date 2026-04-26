@@ -2,6 +2,8 @@
   "rewrites": [
     { "source": "/install", "destination": "/website/install.sh" },
     { "source": "/philosophy", "destination": "/website/philosophy.html" },
+    { "source": "/launch", "destination": "/website/launch.html" },
+    { "source": "/og.png", "destination": "/website/og.jpg" },
     { "source": "/completions/:path*", "destination": "/completions/:path*" },
     { "source": "/favicon.svg", "destination": "/website/favicon.svg" },
     { "source": "/", "destination": "/website/index.html" },

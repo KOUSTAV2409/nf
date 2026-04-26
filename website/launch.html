@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>nf — Global Launch</title>
+  <meta property="og:title" content="nf — Global Launch">
+  <meta property="og:description" content="Witness the launch of the world's fastest terminal note tool.">
+  <meta property="og:image" content="https://nf.iamk.xyz/og.png">
+  <meta property="og:url" content="https://nf.iamk.xyz/launch">
+  <meta name="twitter:card" content="summary_large_image">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+    :root {
+      --bg: #000;
+      --green: #4ae68a;
+      --dim: #444;
+      --text: #fff;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #stage {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    .scene {
+      position: absolute;
+      opacity: 0;
+      visibility: hidden;
+      width: 100%;
+      max-width: 800px;
+      padding: 40px;
+    }
+
+    /* Typography Styles */
+    .h1 { font-size: 48px; font-weight: 700; letter-spacing: -2px; line-height: 1.1; }
+    .h2 { font-size: 24px; color: var(--dim); font-weight: 400; margin-top: 20px; }
+    .highlight { color: var(--green); text-shadow: 0 0 20px rgba(74, 230, 138, 0.4); }
+
+    /* Terminal Mockup */
+    .terminal {
+      background: #111;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 24px;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: left;
+      font-size: 18px;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      position: relative;
+    }
+    .terminal-header {
+      position: absolute;
+      top: 10px; left: 15px;
+      display: flex; gap: 6px;
+    }
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 20px;
+      background: var(--green);
+      vertical-align: middle;
+      animation: blink 0.8s infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* Features Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 30px;
+      text-align: left;
+    }
+    .card {
+      border: 1px solid #222;
+      padding: 24px;
+      border-radius: 8px;
+      background: rgba(255,255,255,0.02);
+    }
+    .card-title { color: var(--green); font-weight: 700; margin-bottom: 8px; }
+
+    /* Start Button Overlay */
+    #overlay {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #start-btn {
+      background: #fff;
+      color: #000;
+      border: none;
+      padding: 16px 32px;
+      font-size: 18px;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    #start-btn:hover { transform: scale(1.05); }
+
+    .logo-large {
+      font-size: 120px;
+      font-weight: 900;
+      letter-spacing: -10px;
+      color: var(--green);
+    }
+  </style>
+</head>
+<body>
+
+  <div id="overlay">
+    <button id="start-btn">LAUNCH CINEMATIC</button>
+  </div>
+
+  <div id="stage">
+    
+    <!-- Scene 1: Hook -->
+    <div class="scene" id="s1">
+      <div class="h1">Your brain is faster than your <span class="highlight">tools.</span></div>
+      <div class="h2">Friction is the enemy of focus.</div>
+    </div>
+
+    <!-- Scene 2: Reveal -->
+    <div class="scene" id="s2">
+      <div class="terminal">
+        <div class="terminal-header">
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div style="margin-top: 15px;">
+          <span style="color:var(--green)">$</span> <span id="type-1"></span><span class="cursor"></span>
+        </div>
+      </div>
+      <div class="h1" style="margin-top: 40px;">Capture anything. <span class="highlight">Instantly.</span></div>
+    </div>
+
+    <!-- Scene 3: Search -->
+    <div class="scene" id="s3">
+      <div class="terminal">
+        <div style="color:var(--dim); margin-bottom: 10px;"># nf search api</div>
+        <div>[1] 2024-04-20: Use <span class="highlight">API</span> keys for prod</div>
+        <div>[2] 2024-04-21: External <span class="highlight">API</span> documentation</div>
+      </div>
+      <div class="h1" style="margin-top: 40px;">Zero-friction <span class="highlight">recall.</span></div>
+    </div>
+
+    <!-- Scene 4: Built for You -->
+    <div class="scene" id="s4">
+      <div class="grid">
+        <div class="card">
+          <div class="card-title">Tab Completion</div>
+          <div class="dim">Works out of the box in Bash & Zsh.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Intuitive</div>
+          <div class="dim">'find', 'del', 'edit' — it just knows.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Open Source</div>
+          <div class="dim">MIT License. Lightweight. Fast.</div>
+        </div>
+        <div class="card">
+          <div class="card-title">Modern UI</div>
+          <div class="dim">Vibrant terminal aesthetics.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Scene 5: Outro -->
+    <div class="scene" id="s5">
+      <div class="logo-large">nf</div>
+      <div class="h1">built by <span class="highlight">iamk.xyz</span></div>
+      <div class="h2" style="font-family:'JetBrains Mono'">nf.iamk.xyz</div>
+    </div>
+
+  </div>
+
+  <script>
+    const btn = document.getElementById('start-btn');
+    const overlay = document.getElementById('overlay');
+
+    btn.addEventListener('click', () => {
+      overlay.style.display = 'none';
+      startCinematic();
+    });
+
+    function startCinematic() {
+      const tl = gsap.timeline();
+
+      // Scene 1
+      tl.to("#s1", { autoAlpha: 1, duration: 1.5 })
+        .to("#s1", { autoAlpha: 0, duration: 1, delay: 2 });
+
+      // Scene 2: Typing Effect
+      tl.to("#s2", { autoAlpha: 1, duration: 1 })
+        .call(() => typeWriter("nf 'the next big idea'", "type-1"))
+        .to("#s2", { autoAlpha: 0, duration: 1, delay: 3 });
+
+      // Scene 3
+      tl.to("#s3", { autoAlpha: 1, scale: 1.1, duration: 1.5 })
+        .to("#s3", { autoAlpha: 0, duration: 1, delay: 2 });
+
+      // Scene 4
+      tl.to("#s4", { autoAlpha: 1, y: -20, duration: 1.5 })
+        .to("#s4", { autoAlpha: 0, duration: 1, delay: 3 });
+
+      // Scene 5: Final Logo
+      tl.fromTo("#s5", { scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 2, ease: "power4.out" });
+    }
+
+    function typeWriter(text, id) {
+      let i = 0;
+      const el = document.getElementById(id);
+      function type() {
+        if (i < text.length) {
+          el.innerHTML += text.charAt(i);
+          i++;
+          setTimeout(type, 100);
+        }
+      }
+      type();
+    }
+  </script>
+</body>
+</html>
