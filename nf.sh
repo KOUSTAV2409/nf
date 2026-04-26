@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.2.1"
+NF_VERSION="0.2.2"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -108,6 +108,8 @@ nf_search() {
     if echo "$line" | grep -qi "$term"; then
       date="${line%% *}"
       content="${line#* }"
+      # Highlight the search term (bold yellow)
+      content=$(echo "$content" | GREP_COLORS='ms=01;33' grep -i --color=always "$term" || echo "$content")
       printf "${C_NUM}%${width}d${C_RESET}  ${C_DATE}%s${C_RESET}  ${C_TEXT}%s${C_RESET}\n" \
         "$line_num" "$date" "$content"
       found=1

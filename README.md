@@ -1,6 +1,6 @@
 # nf — Note Fast
 
-![Version](https://img.shields.io/badge/version-0.2.1-blue.svg)
+![Version](https://img.shields.io/badge/version-0.2.2-blue.svg)
 ![License](https://img.shields.io/github/license/KOUSTAV2409/nf?color=4ae68a)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
 
@@ -142,7 +142,22 @@ It's a plain text file — one note per line, date-prefixed. You can read it wit
 
 ---
 
-## Why nf?
+## ⚡ Tab Completion (Optional)
+Make `nf` even faster by adding auto-completion to your shell.
+
+**For Bash**: Add this to your `~/.bashrc`:
+```bash
+source <(curl -sL https://nf.iamk.xyz/completions/nf.bash)
+```
+
+**For Zsh**: Add this to your `~/.zshrc`:
+```zsh
+source <(curl -sL https://nf.iamk.xyz/completions/nf.zsh)
+```
+
+---
+
+## 💎 Why nf?
 
 - **Fast.** One command to save. One command to search. Under 3 seconds.
 - **Local.** No cloud, no account, no internet required.
