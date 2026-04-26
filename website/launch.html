@@ -143,8 +143,8 @@
     
     <!-- Scene 1: Hook -->
     <div class="scene" id="s1">
-      <div class="h1">Your brain is faster than your <span class="highlight">tools.</span></div>
-      <div class="h2">Friction is the enemy of focus.</div>
+      <div class="h1">Replace your $200/year note apps with <span class="highlight">one command.</span></div>
+      <div class="h2">Capture thoughts at the speed of light. Zero friction.</div>
     </div>
 
     <!-- Scene 2: Reveal -->
@@ -192,11 +192,17 @@
       </div>
     </div>
 
-    <!-- Scene 5: Outro -->
+    <!-- Scene 5: The Builder -->
     <div class="scene" id="s5">
+      <div class="h1">Built with obsession by</div>
+      <div class="h1"><span class="highlight">iamk.xyz</span></div>
+    </div>
+
+    <!-- Scene 6: Final Outro -->
+    <div class="scene" id="s6">
       <div class="logo-large">nf</div>
-      <div class="h1">built by <span class="highlight">iamk.xyz</span></div>
-      <div class="h2" style="font-family:'JetBrains Mono'">nf.iamk.xyz</div>
+      <div class="h2" style="font-family:'JetBrains Mono'; margin-top: 0;">nf.iamk.xyz</div>
+      <button id="replay-btn" style="margin-top: 40px; background: none; border: 1px solid var(--dim); color: var(--dim); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">REPLAY</button>
     </div>
 
   </div>
@@ -230,13 +236,24 @@
       tl.to("#s4", { autoAlpha: 1, y: -20, duration: 1.5 })
         .to("#s4", { autoAlpha: 0, duration: 1, delay: 3 });
 
-      // Scene 5: Final Logo
-      tl.fromTo("#s5", { scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 2, ease: "power4.out" });
+      // Scene 5: The Builder
+      tl.to("#s5", { autoAlpha: 1, duration: 1.5 })
+        .to("#s5", { autoAlpha: 0, duration: 1, delay: 2 });
+
+      // Scene 6: Final Logo
+      tl.fromTo("#s6", { scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 2, ease: "power4.out" });
     }
+
+    document.addEventListener('click', (e) => {
+      if (e.target.id === 'replay-btn') {
+        location.reload();
+      }
+    });
 
     function typeWriter(text, id) {
       let i = 0;
       const el = document.getElementById(id);
+      el.innerHTML = ""; // Clear for replay
       function type() {
         if (i < text.length) {
           el.innerHTML += text.charAt(i);
