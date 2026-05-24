@@ -1,0 +1,13 @@
+pkgbase = nf
+	pkgdesc = Note Fast - A minimal terminal note-taking tool
+	pkgver = 0.3.1
+	pkgrel = 1
+	url = https://github.com/KOUSTAV2409/nf
+	arch = any
+	license = MIT
+	depends = bash
+	optdepends = fzf: for interactive TUI and menu mode
+	source = https://github.com/KOUSTAV2409/nf/archive/refs/tags/v0.3.1.tar.gz
+	sha256sums = 0857a0db55b1483e7b16462ef17f4c17b2bf57df30981bc95670fefe590bcf3d
+
+pkgname = nf
