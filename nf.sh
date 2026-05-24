@@ -285,9 +285,12 @@ nf_edit_raw() {
     fi
   fi
 
-  # Create lock with current PID and ensure cleanup
+  # Create lock with current PID
   echo "$$" > "$lockfile"
-  trap "rm -f \"$lockfile\"" EXIT INT TERM
+
+  # Store lockfile path globally for the trap to prevent unbound variable errors at exit
+  _NF_CURRENT_LOCKFILE="$lockfile"
+  trap 'rm -f "$_NF_CURRENT_LOCKFILE"' EXIT INT TERM
 
   local editor="${EDITOR:-}"
   if [ -z "$editor" ] || ! command -v "$editor" &>/dev/null; then
