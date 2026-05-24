@@ -2,7 +2,7 @@ class Nf < Formula
   desc "Note Fast - A minimal terminal note-taking tool"
   homepage "https://nf.iamk.xyz"
   url "https://github.com/KOUSTAV2409/nf/archive/refs/tags/v0.3.1.tar.gz"
-  sha256 "0857a0db55b1483e7b16462ef17f4c17b2bf57df30981bc95670fefe590bcf3d"
+  sha256 "cb05d2607fd137d4ae7789e8a9c815b17f32d591f8df57d50088423ea6d2303b"
   license "MIT"
 
   def install
