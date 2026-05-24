@@ -124,6 +124,41 @@
     .install-bar button:hover { color: var(--green); }
     .install-bar button.ok { color: var(--green); }
 
+    /* install tabs */
+    .install-tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+    .tab-btn {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      color: var(--dim);
+      padding: 6px 12px;
+      font-size: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.15s;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .tab-btn:hover {
+      color: var(--text);
+      border-color: var(--dim);
+    }
+    .tab-btn.active {
+      background: var(--code-bg);
+      color: var(--green);
+      border-color: var(--green);
+    }
+    .tab-content {
+      display: none !important;
+    }
+    .tab-content.active {
+      display: flex !important;
+    }
+
     /* ---- section dividers ---- */
     .sep { border: none; border-top: 1px solid var(--border); margin: 0; }
 
@@ -323,9 +358,17 @@
         Built for those who hate slow tools. Fucking smooth.<br>
         <span class="highlight">Local-first. Plain text. You own your data.</span>
       </p>
-      <div class="install-bar">
+      <div class="install-tabs">
+        <button class="tab-btn active" onclick="switchInstall(this, 'curl')">curl</button>
+        <button class="tab-btn" onclick="switchInstall(this, 'brew')">homebrew</button>
+      </div>
+      <div id="install-curl" class="install-bar tab-content active">
         <code><span class="ps">$</span> <span id="cmd1">curl -sL https://nf.iamk.xyz/install | bash</span></code>
         <button onclick="cp(this,'cmd1')" aria-label="Copy">copy</button>
+      </div>
+      <div id="install-brew" class="install-bar tab-content">
+        <code><span class="ps">$</span> <span id="cmd_brew_hero">brew install KOUSTAV2409/tap/nf</span></code>
+        <button onclick="cp(this,'cmd_brew_hero')" aria-label="Copy">copy</button>
       </div>
     </div>
   </section>
@@ -460,6 +503,15 @@
         btn.classList.add('ok');
         setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('ok'); }, 1500);
       });
+    }
+    function switchInstall(btn, type) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      document.getElementById('install-curl').classList.remove('active');
+      document.getElementById('install-brew').classList.remove('active');
+      document.getElementById('install-' + type).classList.add('active');
     }
   </script>
 </body>
