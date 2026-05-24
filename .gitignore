@@ -1,0 +1,10 @@
+# Local Homebrew Tap repository
+homebrew-tap/
+
+# Notes files and locks
+.lock
+notes
+
+# Temporary files
+/tmp/
+*.tar.gz
