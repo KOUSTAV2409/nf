@@ -1,5 +1,7 @@
-nf (0.1.0-1) unstable; urgency=medium
+nf (0.3.1) unstable; urgency=medium
 
-  * Initial release.
+  * Release v0.3.1.
+  * Resolve raw editor trap unbound variable bugs.
+  * Integrate Homebrew Tap installation support.
 
- -- Your Name <your.email@example.com>  Sat, 25 Apr 2026 12:00:00 +0000
+ -- KOUSTAV <koustavganguly24@gmail.com>  Sun, 24 May 2026 22:20:00 +0530

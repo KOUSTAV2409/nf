@@ -361,6 +361,7 @@
       <div class="install-tabs">
         <button class="tab-btn active" onclick="switchInstall(this, 'curl')">curl</button>
         <button class="tab-btn" onclick="switchInstall(this, 'brew')">homebrew</button>
+        <button class="tab-btn" onclick="switchInstall(this, 'deb')">debian/ubuntu</button>
       </div>
       <div id="install-curl" class="install-bar tab-content active">
         <code><span class="ps">$</span> <span id="cmd1">curl -sL https://nf.iamk.xyz/install | bash</span></code>
@@ -369,6 +370,10 @@
       <div id="install-brew" class="install-bar tab-content">
         <code><span class="ps">$</span> <span id="cmd_brew_hero">brew install KOUSTAV2409/tap/nf</span></code>
         <button onclick="cp(this,'cmd_brew_hero')" aria-label="Copy">copy</button>
+      </div>
+      <div id="install-deb" class="install-bar tab-content">
+        <code><span class="ps">$</span> <span id="cmd_deb_hero">curl -LO https://github.com/KOUSTAV2409/nf/releases/download/v0.3.1/nf_0.3.1_all.deb && sudo apt install ./nf_0.3.1_all.deb</span></code>
+        <button onclick="cp(this,'cmd_deb_hero')" aria-label="Copy">copy</button>
       </div>
     </div>
   </section>
@@ -467,6 +472,12 @@
         <button onclick="cp(this,'cmd_brew')" aria-label="Copy">copy</button>
       </div>
 
+      <div class="inst-label">debian/ubuntu <span class="rec">.deb package</span></div>
+      <div class="install-bar" style="max-width:100%;margin-bottom:28px">
+        <code><span class="ps">$</span> <span id="cmd_deb">curl -LO https://github.com/KOUSTAV2409/nf/releases/download/v0.3.1/nf_0.3.1_all.deb && sudo apt install ./nf_0.3.1_all.deb</span></code>
+        <button onclick="cp(this,'cmd_deb')" aria-label="Copy">copy</button>
+      </div>
+
       <div class="inst-label">manual</div>
       <div class="inst-block">
         <pre><span class="p">$ </span>git clone https://github.com/KOUSTAV2409/nf.git
@@ -511,6 +522,7 @@
       
       document.getElementById('install-curl').classList.remove('active');
       document.getElementById('install-brew').classList.remove('active');
+      document.getElementById('install-deb').classList.remove('active');
       document.getElementById('install-' + type).classList.add('active');
     }
   </script>
