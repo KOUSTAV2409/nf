@@ -1,8 +1,5 @@
-nf v0.3.0 — The Interactive Release
+nf v0.3.1 — Bugfix Release
 
 ✨ What's New:
-- ⌨️ Modern Editor Shortcuts: Use Ctrl+S to Save, Ctrl+D to Delete Line, and Ctrl+Q to Quit (Vim/Nvim).
-- 🔒 Data Protection: Added lock-file support to prevent accidental overwrites during multi-terminal edits.
-- 🎨 Search Highlighting: Search results now highlight your matched terms in bold yellow.
-- 💡 Smart Editor Fallback: Better instructions and tips for non-Vim/Nano users.
-- 🚀 Zero-Friction Branding: Local-first, plain text, and 100% data ownership front-and-center.
+- 🛠️ Fixed lockfile unbound variable trap crash during edit mode.
+- 💡 Added fallback logic to standard editor selection when $EDITOR command is missing or uninstalled.

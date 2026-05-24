@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.3.0"
+NF_VERSION="0.3.1"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -287,12 +287,14 @@ nf_edit_raw() {
 
   # Create lock with current PID and ensure cleanup
   echo "$$" > "$lockfile"
-  trap 'rm -f "$lockfile"' EXIT INT TERM
+  trap "rm -f \"$lockfile\"" EXIT INT TERM
 
   local editor="${EDITOR:-}"
-  if [ -z "$editor" ]; then
+  if [ -z "$editor" ] || ! command -v "$editor" &>/dev/null; then
     if command -v nano &>/dev/null; then editor="nano";
     elif command -v vi &>/dev/null; then editor="vi";
+    elif command -v vim &>/dev/null; then editor="vim";
+    elif command -v nvim &>/dev/null; then editor="nvim";
     else
       echo "No editor found. Set \$EDITOR or install nano/vi."
       rm -f "$lockfile"
