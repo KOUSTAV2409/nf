@@ -1,3 +1,11 @@
+nf (0.3.2) unstable; urgency=medium
+
+  * Release v0.3.2.
+  * Add non-blocking shell startup update checks.
+  * Integrate shell completion files into Homebrew Formula installation.
+
+ -- KOUSTAV <koustavganguly24@gmail.com>  Tue, 02 Jun 2026 15:30:00 +0530
+
 nf (0.3.1) unstable; urgency=medium
 
   * Release v0.3.1.
