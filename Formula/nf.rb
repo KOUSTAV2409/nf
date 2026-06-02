@@ -7,6 +7,8 @@ class Nf < Formula
 
   def install
     bin.install "nf.sh" => "nf"
+    bash_completion.install "completions/nf.bash" => "nf"
+    zsh_completion.install "completions/nf.zsh" => "_nf"
   end
 
   def post_install

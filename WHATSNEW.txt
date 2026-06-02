@@ -1,5 +1,5 @@
-nf v0.3.1 — Bugfix Release
+nf v0.3.2 — Feature Release
 
 ✨ What's New:
-- 🛠️ Fixed lockfile unbound variable trap crash during edit mode.
-- 💡 Added fallback logic to standard editor selection when $EDITOR command is missing or uninstalled.
+- 💡 Added non-blocking terminal startup update checks.
+- 🐚 Added automatic Shell Completion generation and integration for Homebrew installations.

@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.3.1"
+NF_VERSION="0.3.2"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 NF_FILE="$NF_DIR/notes"
 
@@ -418,10 +418,21 @@ Usage:
 EOF
 }
 
-# Check for updates subtly (max once per day)
+# Check for updates subtly (reads cached status and triggers background check)
 nf_check_for_updates() {
+  local update_file="$NF_DIR/.update_available"
+  if [ -f "$update_file" ]; then
+    cat "$update_file"
+  fi
+  # Trigger background check
+  (main check-update &>/dev/null &)
+}
+
+# Run the actual background check to fetch remote version and update cache
+nf_check_for_updates_bg() {
   nf_ensure_storage
   local check_file="$NF_DIR/.last_check"
+  local update_file="$NF_DIR/.update_available"
   local now
   now=$(date +%s)
   
@@ -429,26 +440,51 @@ nf_check_for_updates() {
   if [ -f "$check_file" ]; then
     local last_check
     last_check=$(cat "$check_file")
-    # Basic math check for bash
     if [ "$((now - last_check))" -lt 86400 ]; then
       return
     fi
   fi
   
-  # Save current check time
   echo "$now" > "$check_file"
   
-  # Fast check: Fetch version from repo (background-ish with short timeout)
   local remote_ver
   remote_ver=$(curl -sL --connect-timeout 2 "https://raw.githubusercontent.com/KOUSTAV2409/nf/main/nf.sh" | grep "NF_VERSION=" | head -1 | cut -d'"' -f2 || echo "")
   
   if [ -n "$remote_ver" ] && [ "$remote_ver" != "$NF_VERSION" ]; then
-    echo -e "\n${C_DIM}💡 A new version of nf (v$remote_ver) is available. Run 'nf update' to upgrade.${C_RESET}"
+    # Write update message with ANSI color codes to cache file
+    local c_dim='\033[2m'
+    local c_reset='\033[0m'
+    local c_yellow='\033[33m'
+    
+    local is_brew=false
+    local binary_path
+    binary_path=$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")
+    if [[ "$binary_path" == *"/Cellar/"* ]] || [[ "$binary_path" == *"/homebrew/"* ]] || [[ "$binary_path" == *"/Homebrew/"* ]]; then
+      is_brew=true
+    fi
+    
+    if [ "$is_brew" = true ]; then
+      echo -e "${c_yellow}💡${c_reset} ${c_dim}A new version of nf (v$remote_ver) is available. Run '${c_reset}brew upgrade KOUSTAV2409/tap/nf${c_dim}' to upgrade.${c_reset}" > "$update_file"
+    else
+      echo -e "${c_yellow}💡${c_reset} ${c_dim}A new version of nf (v$remote_ver) is available. Run '${c_reset}nf update${c_dim}' to upgrade.${c_reset}" > "$update_file"
+    fi
+  else
+    # Clear the file if up-to-date
+    rm -f "$update_file"
   fi
 }
 
 # Update nf to latest version from web
 nf_update() {
+  local binary_path
+  binary_path=$(readlink -f "$0" 2>/dev/null || realpath "$0" 2>/dev/null || echo "$0")
+  if [[ "$binary_path" == *"/Cellar/"* ]] || [[ "$binary_path" == *"/homebrew/"* ]] || [[ "$binary_path" == *"/Homebrew/"* ]]; then
+    echo -e "${C_RED}⚠ nf was installed via Homebrew.${C_RESET}"
+    echo "Please upgrade it using Homebrew:"
+    echo "  brew upgrade KOUSTAV2409/tap/nf"
+    return 1
+  fi
+
   echo "🔄 Updating nf to latest version..."
   if curl -sL https://nf.iamk.xyz/install | bash; then
     echo -e "${C_GREEN}✅ Update complete!${C_RESET}\n"
@@ -493,6 +529,9 @@ main() {
       ;;
     update|--update|-u)
       nf_update
+      ;;
+    check-update|--check-update)
+      nf_check_for_updates_bg
       ;;
     help|--help|-h)
       nf_help

@@ -32,3 +32,13 @@ if [[ -n "$ZSH_VERSION" ]]; then
   fi
   compdef _nf nf
 fi
+
+# Subtle background update check on shell startup
+if [ -t 1 ]; then
+  NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
+  if [ -f "$NF_DIR/.update_available" ]; then
+    cat "$NF_DIR/.update_available"
+  fi
+  # Trigger background check
+  (nf check-update &>/dev/null &)
+fi
