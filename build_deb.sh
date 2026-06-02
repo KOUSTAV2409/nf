@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Define build directory and output package name
 BUILD_DIR="build_deb_temp"
-VERSION="0.3.1"
+VERSION="0.3.2"
 DEB_NAME="nf_${VERSION}_all.deb"
 
 echo "Building Debian package for nf v${VERSION}..."
@@ -21,8 +21,8 @@ cp nf.sh "$BUILD_DIR/usr/bin/nf"
 chmod 755 "$BUILD_DIR/usr/bin/nf"
 
 # Copy completion script if present
-if [ -f "completions/nf" ]; then
-  cp completions/nf "$BUILD_DIR/usr/share/bash-completion/completions/nf"
+if [ -f "completions/nf.bash" ]; then
+  cp completions/nf.bash "$BUILD_DIR/usr/share/bash-completion/completions/nf"
   chmod 644 "$BUILD_DIR/usr/share/bash-completion/completions/nf"
 fi
 

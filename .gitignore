@@ -8,3 +8,4 @@ notes
 # Temporary files
 /tmp/
 *.tar.gz
+*.deb
