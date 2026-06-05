@@ -1,0 +1,18 @@
+  <script>
+    function cp(btn, id) {
+      navigator.clipboard.writeText(document.getElementById(id).textContent).then(function() {
+        btn.textContent = 'copied';
+        btn.classList.add('ok');
+        setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('ok'); }, 1500);
+      });
+    }
+    function switchInstall(btn, type) {
+      const parent = btn.parentElement;
+      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      document.getElementById('install-curl').classList.remove('active');
+      document.getElementById('install-brew').classList.remove('active');
+      document.getElementById('install-' + type).classList.add('active');
+    }
+  </script>

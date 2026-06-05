@@ -12,7 +12,8 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     - name: Run ShellCheck
-      uses: ludeeus/action-shellcheck@master
+      uses: ludeeus/action-shellcheck@2.0.0
       with:
         scandir: '.'
-        additional_files: 'nf.sh'
+        additional_files: 'nf.sh install.sh uninstall.sh build_deb.sh website/install.sh website/uninstall.sh completions/nf.bash completions/nf.zsh'
+        severity: error

@@ -1,6 +1,6 @@
-# Maintainer: Your Name <your.email@example.com>
+# Maintainer: KOUSTAV <koustavganguly24@gmail.com>
 pkgname=nf
-pkgver=0.3.2
+pkgver=0.3.3
 pkgrel=1
 pkgdesc="Note Fast - A minimal terminal note-taking tool"
 arch=('any')

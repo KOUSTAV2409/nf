@@ -1,35 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>nf — Note Fast</title>
-  <meta name="description" content="A single-command note tool for Linux and macOS. Capture anything instantly from your terminal — commands, thoughts, snippets, whatever.">
-  <meta property="og:title" content="nf — Note Fast">
-  <meta property="og:description" content="Capture thoughts at the speed of light. A zero-friction terminal note tool for developers.">
-  <meta property="og:image" content="https://nf.iamk.xyz/og.jpg">
-  <meta property="og:image:type" content="image/jpeg">
-  <meta property="og:url" content="https://nf.iamk.xyz">
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:image" content="https://nf.iamk.xyz/og.jpg">
-  <meta name="twitter:title" content="nf — Note Fast">
-  <meta name="twitter:description" content="Capture thoughts at the speed of light. A zero-friction terminal note tool for developers.">
-  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
-  <link rel="stylesheet" href="/css/site.css">
-</head>
-<body>
-  <header>
-    <div class="w">
-      <span class="logo">nf</span>
-      <div class="hdr-links">
-        <a href="#demo">demo</a>
-        <a href="#commands">commands</a>
-        <a href="#install">install</a>
-        <a href="/philosophy">philosophy</a>
-        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
-      </div>
-    </div>
-  </header>
   <section class="hero">
     <div class="w">
       <h1>Replace your $200/year note apps with <span class="highlight">one command.</span></h1>
@@ -164,33 +132,3 @@
       </div>
     </div>
   </section>
-  <footer>
-    <div class="w">
-      <span class="foot-left">MIT — built by <a href="https://iamk.xyz" target="_blank" rel="noopener">iamk.xyz</a></span>
-      <div class="foot-right">
-        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
-        <a href="https://github.com/KOUSTAV2409/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing</a>
-        <a href="https://github.com/KOUSTAV2409/nf/blob/main/LICENSE" target="_blank" rel="noopener">license</a>
-      </div>
-    </div>
-  </footer>
-  <script>
-    function cp(btn, id) {
-      navigator.clipboard.writeText(document.getElementById(id).textContent).then(function() {
-        btn.textContent = 'copied';
-        btn.classList.add('ok');
-        setTimeout(function() { btn.textContent = 'copy'; btn.classList.remove('ok'); }, 1500);
-      });
-    }
-    function switchInstall(btn, type) {
-      const parent = btn.parentElement;
-      parent.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      
-      document.getElementById('install-curl').classList.remove('active');
-      document.getElementById('install-brew').classList.remove('active');
-      document.getElementById('install-' + type).classList.add('active');
-    }
-  </script>
-</body>
-</html>

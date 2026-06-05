@@ -6,9 +6,10 @@
 
 set -euo pipefail
 
-NF_VERSION="0.3.2"
+NF_VERSION="0.3.3"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
-NF_FILE="$NF_DIR/notes"
+# Override with NF_NOTES_FILE to store notes elsewhere (plain text file).
+NF_FILE="${NF_NOTES_FILE:-$NF_DIR/notes}"
 
 # --- color setup ---
 # Detect whether the terminal supports color output.
@@ -43,46 +44,41 @@ nf_add() {
   echo -e "${C_GREEN}Note saved.${C_RESET}"
 }
 
-# Print all notes as a numbered list with color formatting
-nf_list() {
+# Print notes as a numbered list. Pass "raw" for plain output (fzf).
+nf_list_print() {
+  local mode="${1:-color}"
+
   if [ ! -f "$NF_FILE" ] || [ ! -s "$NF_FILE" ]; then
-    echo 'No notes yet. Add one with: nf "your note"'
+    if [ "$mode" = "color" ]; then
+      echo 'No notes yet. Add one with: nf "your note"'
+    fi
     return
   fi
 
   local total line_num date content
   total=$(wc -l < "$NF_FILE")
-  # Calculate width needed for the largest line number
   local width=${#total}
 
   line_num=0
   while IFS= read -r line; do
     line_num=$((line_num + 1))
-    # Split the line into date (first field) and content (rest)
     date="${line%% *}"
     content="${line#* }"
-    printf "${C_NUM}%${width}d${C_RESET}  ${C_DATE}%s${C_RESET}  ${C_TEXT}%s${C_RESET}\n" \
-      "$line_num" "$date" "$content"
+    if [ "$mode" = "raw" ]; then
+      printf "%${width}d  %s  %s\n" "$line_num" "$date" "$content"
+    else
+      printf "${C_NUM}%${width}d${C_RESET}  ${C_DATE}%s${C_RESET}  ${C_TEXT}%s${C_RESET}\n" \
+        "$line_num" "$date" "$content"
+    fi
   done < "$NF_FILE"
 }
 
-# Raw list output for fzf (numbered, no color)
+nf_list() {
+  nf_list_print color
+}
+
 nf_list_raw() {
-  if [ ! -f "$NF_FILE" ] || [ ! -s "$NF_FILE" ]; then
-    return
-  fi
-
-  local total line_num date content
-  total=$(wc -l < "$NF_FILE")
-  local width=${#total}
-
-  line_num=0
-  while IFS= read -r line; do
-    line_num=$((line_num + 1))
-    date="${line%% *}"
-    content="${line#* }"
-    printf "%${width}d  %s  %s\n" "$line_num" "$date" "$content"
-  done < "$NF_FILE"
+  nf_list_print raw
 }
 
 # Case-insensitive search through notes
@@ -107,11 +103,10 @@ nf_search() {
   while IFS= read -r line; do
     line_num=$((line_num + 1))
     # Case-insensitive match using bash pattern (convert both to lowercase)
-    if echo "$line" | grep -qi "$term"; then
+    if echo "$line" | grep -qiF -- "$term"; then
       date="${line%% *}"
       content="${line#* }"
-      # Highlight the search term (bold yellow)
-      content=$(echo "$content" | GREP_COLORS='ms=01;33' grep -i --color=always "$term" || echo "$content")
+      content=$(echo "$content" | GREP_COLORS='ms=01;33' grep -iF --color=always -- "$term" || echo "$content")
       printf "${C_NUM}%${width}d${C_RESET}  ${C_DATE}%s${C_RESET}  ${C_TEXT}%s${C_RESET}\n" \
         "$line_num" "$date" "$content"
       found=1
@@ -368,7 +363,7 @@ nf_tui() {
     --header="enter: copy to clipboard | ctrl-d: delete | esc: quit" \
     --preview='echo {}' \
     --preview-window=up:3:wrap \
-    --bind="ctrl-d:execute(nf del {1})+reload(cat $NF_FILE)" \
+    --bind="ctrl-d:execute(nf del {1})+reload(cat \"$NF_FILE\")" \
     --height=80% \
   ) || true  # Don't exit on esc/ctrl-c
 
@@ -415,6 +410,7 @@ Usage:
   nf version        Show version
 
   Notes are stored at: $NF_FILE
+  Override path:       NF_NOTES_FILE=/path/to/notes
 EOF
 }
 

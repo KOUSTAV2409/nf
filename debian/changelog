@@ -1,3 +1,13 @@
+nf (0.3.3) unstable; urgency=medium
+
+  * Release v0.3.3.
+  * Add NF_NOTES_FILE override for custom notes path.
+  * Use fixed-string search; refactor list printing.
+  * Website build from shared partials; installer consent flag.
+  * Expand ShellCheck CI; sync version from VERSION file.
+
+ -- KOUSTAV <koustavganguly24@gmail.com>  Fri, 05 Jun 2026 12:00:00 +0530
+
 nf (0.3.2) unstable; urgency=medium
 
   * Release v0.3.2.
