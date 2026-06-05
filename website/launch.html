@@ -11,202 +11,101 @@
   <meta property="og:url" content="https://nf.iamk.xyz/launch">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:image" content="https://nf.iamk.xyz/og.jpg">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/site.css">
+  <link rel="stylesheet" href="/css/launch.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400;600&display=swap');
-
-    :root {
-      --bg: #000;
-      --green: #4ae68a;
-      --dim: #444;
-      --text: #fff;
-    }
-
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', sans-serif;
-      overflow: hidden;
-      height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    #stage {
-      width: 100%;
-      height: 100%;
-      position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-    }
-
-    .scene {
-      position: absolute;
-      opacity: 0;
-      visibility: hidden;
-      width: 100%;
-      max-width: 800px;
-      padding: 40px;
-    }
-
-    /* Typography Styles */
-    .h1 { font-size: 48px; font-weight: 700; letter-spacing: -2px; line-height: 1.1; }
-    .h2 { font-size: 24px; color: var(--dim); font-weight: 400; margin-top: 20px; }
-    .highlight { color: var(--green); text-shadow: 0 0 20px rgba(74, 230, 138, 0.4); }
-
-    /* Terminal Mockup */
-    .terminal {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 24px;
-      font-family: 'JetBrains Mono', monospace;
-      text-align: left;
-      font-size: 18px;
-      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
-      position: relative;
-    }
-    .terminal-header {
-      position: absolute;
-      top: 10px; left: 15px;
-      display: flex; gap: 6px;
-    }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: #333; }
-    .cursor {
-      display: inline-block;
-      width: 10px;
-      height: 20px;
-      background: var(--green);
-      vertical-align: middle;
-      animation: blink 0.8s infinite;
-    }
-    @keyframes blink { 50% { opacity: 0; } }
-
-    /* Features Grid */
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 30px;
-      text-align: left;
-    }
-    .card {
-      border: 1px solid #222;
-      padding: 24px;
-      border-radius: 8px;
-      background: rgba(255,255,255,0.02);
-    }
-    .card-title { color: var(--green); font-weight: 700; margin-bottom: 8px; }
-
-    /* Start Button Overlay */
-    #overlay {
-      position: fixed;
-      inset: 0;
-      background: #000;
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    #start-btn {
-      background: #fff;
-      color: #000;
-      border: none;
-      padding: 16px 32px;
-      font-size: 18px;
-      font-weight: 700;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: transform 0.2s;
-    }
-    #start-btn:hover { transform: scale(1.05); }
-
-    .logo-large {
-      font-size: 120px;
-      font-weight: 900;
-      letter-spacing: -10px;
-      color: var(--green);
-    }
-  </style>
 </head>
-<body>
+<body class="page-launch">
+  <header>
+    <div class="w">
+      <a href="/" class="logo">nf</a>
+      <div class="hdr-links">
+        <a href="/#demo">demo</a>
+        <a href="/#commands">commands</a>
+        <a href="/#install">install</a>
+        <a href="/guides/export">export</a>
+        <a href="/philosophy">philosophy</a>
+        <a href="/launch">launch</a>
+        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+      </div>
+    </div>
+  </header>
+  <div class="launch-main">
+    <div id="overlay">
+      <button id="start-btn">LAUNCH CINEMATIC</button>
+    </div>
 
-  <div id="overlay">
-    <button id="start-btn">LAUNCH CINEMATIC</button>
+    <div id="stage">
+      <div class="scene" id="s1">
+        <div class="h1">Replace your $200/year note apps with <span class="highlight">one command.</span></div>
+        <div class="h2">Capture thoughts at the speed of light. Zero friction.</div>
+      </div>
+
+      <div class="scene" id="s2">
+        <div class="launch-terminal">
+          <div class="launch-terminal-header">
+            <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+          </div>
+          <div style="margin-top: 15px;">
+            <span style="color:var(--green)">$</span> <span id="type-1"></span><span class="cursor"></span>
+          </div>
+        </div>
+        <div class="h1" style="margin-top: 40px;">Capture anything. <span class="highlight">Instantly.</span></div>
+      </div>
+
+      <div class="scene" id="s3">
+        <div class="launch-terminal">
+          <div style="color:#444; margin-bottom: 10px;"># nf search api</div>
+          <div>[1] 2024-04-20: Use <span class="highlight">API</span> keys for prod</div>
+          <div>[2] 2024-04-21: External <span class="highlight">API</span> documentation</div>
+        </div>
+        <div class="h1" style="margin-top: 40px;">Zero-friction <span class="highlight">recall.</span></div>
+      </div>
+
+      <div class="scene" id="s4">
+        <div class="grid">
+          <div class="card">
+            <div class="card-title">Tab Completion</div>
+            <div class="dim">Works out of the box in Bash & Zsh.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Intuitive</div>
+            <div class="dim">'find', 'del', 'edit' — it just knows.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Open Source</div>
+            <div class="dim">MIT License. Lightweight. Fast.</div>
+          </div>
+          <div class="card">
+            <div class="card-title">Modern UI</div>
+            <div class="dim">Vibrant terminal aesthetics.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="scene" id="s5">
+        <div class="h1">Built with obsession by</div>
+        <div class="h1"><span class="highlight">iamk.xyz</span></div>
+      </div>
+
+      <div class="scene" id="s6">
+        <div class="logo-large">nf</div>
+        <div class="h2" style="font-family:'JetBrains Mono'; margin-top: 0;">nf.iamk.xyz</div>
+        <button id="replay-btn" style="margin-top: 40px; background: none; border: 1px solid #444; color: #444; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">REPLAY</button>
+      </div>
+    </div>
   </div>
-
-  <div id="stage">
-    
-    <!-- Scene 1: Hook -->
-    <div class="scene" id="s1">
-      <div class="h1">Replace your $200/year note apps with <span class="highlight">one command.</span></div>
-      <div class="h2">Capture thoughts at the speed of light. Zero friction.</div>
-    </div>
-
-    <!-- Scene 2: Reveal -->
-    <div class="scene" id="s2">
-      <div class="terminal">
-        <div class="terminal-header">
-          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
-        </div>
-        <div style="margin-top: 15px;">
-          <span style="color:var(--green)">$</span> <span id="type-1"></span><span class="cursor"></span>
-        </div>
-      </div>
-      <div class="h1" style="margin-top: 40px;">Capture anything. <span class="highlight">Instantly.</span></div>
-    </div>
-
-    <!-- Scene 3: Search -->
-    <div class="scene" id="s3">
-      <div class="terminal">
-        <div style="color:var(--dim); margin-bottom: 10px;"># nf search api</div>
-        <div>[1] 2024-04-20: Use <span class="highlight">API</span> keys for prod</div>
-        <div>[2] 2024-04-21: External <span class="highlight">API</span> documentation</div>
-      </div>
-      <div class="h1" style="margin-top: 40px;">Zero-friction <span class="highlight">recall.</span></div>
-    </div>
-
-    <!-- Scene 4: Built for You -->
-    <div class="scene" id="s4">
-      <div class="grid">
-        <div class="card">
-          <div class="card-title">Tab Completion</div>
-          <div class="dim">Works out of the box in Bash & Zsh.</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Intuitive</div>
-          <div class="dim">'find', 'del', 'edit' — it just knows.</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Open Source</div>
-          <div class="dim">MIT License. Lightweight. Fast.</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Modern UI</div>
-          <div class="dim">Vibrant terminal aesthetics.</div>
-        </div>
+  <footer>
+    <div class="w">
+      <span class="foot-left">MIT — built by <a href="https://iamk.xyz" target="_blank" rel="noopener">iamk.xyz</a></span>
+      <div class="foot-right">
+        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/LICENSE" target="_blank" rel="noopener">license</a>
       </div>
     </div>
-
-    <!-- Scene 5: The Builder -->
-    <div class="scene" id="s5">
-      <div class="h1">Built with obsession by</div>
-      <div class="h1"><span class="highlight">iamk.xyz</span></div>
-    </div>
-
-    <!-- Scene 6: Final Outro -->
-    <div class="scene" id="s6">
-      <div class="logo-large">nf</div>
-      <div class="h2" style="font-family:'JetBrains Mono'; margin-top: 0;">nf.iamk.xyz</div>
-      <button id="replay-btn" style="margin-top: 40px; background: none; border: 1px solid var(--dim); color: var(--dim); padding: 8px 16px; border-radius: 4px; cursor: pointer; font-size: 12px;">REPLAY</button>
-    </div>
-
-  </div>
-
+  </footer>
   <script>
     const btn = document.getElementById('start-btn');
     const overlay = document.getElementById('overlay');
@@ -219,28 +118,22 @@
     function startCinematic() {
       const tl = gsap.timeline();
 
-      // Scene 1
       tl.to("#s1", { autoAlpha: 1, duration: 1.5 })
         .to("#s1", { autoAlpha: 0, duration: 1, delay: 2 });
 
-      // Scene 2: Typing Effect
       tl.to("#s2", { autoAlpha: 1, duration: 1 })
         .call(() => typeWriter("nf 'the next big idea'", "type-1"))
         .to("#s2", { autoAlpha: 0, duration: 1, delay: 3 });
 
-      // Scene 3
       tl.to("#s3", { autoAlpha: 1, scale: 1.1, duration: 1.5 })
         .to("#s3", { autoAlpha: 0, duration: 1, delay: 2 });
 
-      // Scene 4
       tl.to("#s4", { autoAlpha: 1, y: -20, duration: 1.5 })
         .to("#s4", { autoAlpha: 0, duration: 1, delay: 3 });
 
-      // Scene 5: The Builder
       tl.to("#s5", { autoAlpha: 1, duration: 1.5 })
         .to("#s5", { autoAlpha: 0, duration: 1, delay: 2 });
 
-      // Scene 6: Final Logo
       tl.fromTo("#s6", { scale: 0.8 }, { autoAlpha: 1, scale: 1, duration: 2, ease: "power4.out" });
     }
 
@@ -253,7 +146,7 @@
     function typeWriter(text, id) {
       let i = 0;
       const el = document.getElementById(id);
-      el.innerHTML = ""; // Clear for replay
+      el.innerHTML = "";
       function type() {
         if (i < text.length) {
           el.innerHTML += text.charAt(i);

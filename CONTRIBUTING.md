@@ -35,7 +35,17 @@ Source lives in `website-src/` (shared partials + page bodies). Rebuild with:
 ./scripts/build-website.sh
 ```
 
-`launch.html` is edited directly in `website/` — it is not assembled by the build script.
+Preview locally (serves `website/` as the site root — required for CSS paths):
+
+```bash
+./scripts/preview-website.sh
+# open http://127.0.0.1:8080/
+```
+
+If you use Live Server, open files from the `website/` folder (or use `.vscode/settings.json` root).  
+Do **not** use `http://localhost:5500/website/index.html` from the repo root — `/css/site.css` will 404.
+
+All marketing pages (including `launch.html`) are assembled from `website-src/partials/header.html`, `footer.html`, and page bodies.
 
 ### Version bumps
 
