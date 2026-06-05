@@ -40,7 +40,14 @@ header .w {
   justify-content: space-between;
   align-items: center;
 }
-.logo { color: var(--green); font-weight: 700; font-size: 15px; letter-spacing: -0.5px; }
+.logo, a.logo {
+  color: var(--green);
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: -0.5px;
+  text-decoration: none;
+}
+a.logo:hover { color: var(--green); text-decoration: none; }
 .hdr-links { display: flex; gap: 20px; }
 .hdr-links a { color: var(--dim); font-size: 13px; }
 .hdr-links a:hover { color: var(--text); text-decoration: none; }
@@ -307,54 +314,43 @@ footer .w {
 .foot-right a { color: var(--dim); font-size: 12px; }
 .foot-right a:hover { color: var(--text); text-decoration: none; }
 
-/* ---- philosophy page ---- */
-body.page-philosophy {
+/* ---- article pages (philosophy, guides) ---- */
+body.page-article {
   line-height: 1.8;
   font-size: 15px;
-  padding: 60px 20px;
 }
-body.page-philosophy > .w { max-width: 600px; padding: 0; }
-body.page-philosophy .w > header {
-  position: static;
-  border: none;
-  background: none;
-  backdrop-filter: none;
-  padding: 0;
-  margin-bottom: 60px;
+body.page-article > .w {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 48px 20px 0;
 }
-body.page-philosophy .w > header a {
-  color: var(--dim);
-  text-decoration: none;
-  font-size: 13px;
-}
-body.page-philosophy .w > header a:hover { color: var(--green); }
-body.page-philosophy main h1 {
+body.page-article main h1 {
   font-size: 24px;
   color: #fff;
   margin-bottom: 30px;
   letter-spacing: -0.5px;
 }
-body.page-philosophy main h2 {
+body.page-article main h2 {
   font-size: 18px;
   color: #fff;
   margin-bottom: 20px;
   letter-spacing: -0.5px;
 }
-body.page-philosophy main p { margin-bottom: 24px; }
-body.page-philosophy main hr {
+body.page-article main p { margin-bottom: 24px; }
+body.page-article main hr {
   border: 0;
   border-top: 1px solid var(--border);
   margin: 40px 0;
 }
-body.page-philosophy .quote {
+body.page-article .quote {
   border-left: 2px solid var(--green);
   padding-left: 20px;
   font-style: italic;
   color: #fff;
   margin: 40px 0;
 }
-body.page-philosophy footer { margin-top: 80px; }
-body.page-philosophy main pre.example {
+body.page-article footer { margin-top: 80px; }
+body.page-article main pre.example {
   background: var(--code-bg);
   border: 1px solid var(--border);
   border-radius: 6px;
@@ -365,25 +361,25 @@ body.page-philosophy main pre.example {
   margin-bottom: 24px;
   color: var(--text);
 }
-body.page-philosophy main pre.example .ex-c { color: var(--green); }
-body.page-philosophy main pre.example .ex-d { color: var(--dim); }
-body.page-philosophy main pre.example .ex-ok { color: var(--green); }
-body.page-philosophy main code {
+body.page-article main pre.example .ex-c { color: var(--green); }
+body.page-article main pre.example .ex-d { color: var(--dim); }
+body.page-article main pre.example .ex-ok { color: var(--green); }
+body.page-article main code {
   color: var(--green);
   font-size: 0.95em;
 }
-body.page-philosophy .guide-list {
+body.page-article .guide-list {
   list-style: none;
   margin-bottom: 24px;
 }
-body.page-philosophy .guide-list li {
+body.page-article .guide-list li {
   color: var(--dim);
   font-size: 14px;
   padding: 10px 0;
   border-bottom: 1px solid var(--border);
 }
-body.page-philosophy .guide-list li:last-child { border-bottom: none; }
-body.page-philosophy .guide-list li b { color: var(--text); font-weight: 600; }
+body.page-article .guide-list li:last-child { border-bottom: none; }
+body.page-article .guide-list li b { color: var(--text); font-weight: 600; }
 
 /* ---- responsive ---- */
 @media (max-width: 520px) {
