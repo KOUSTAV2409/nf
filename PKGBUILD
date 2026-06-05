@@ -9,7 +9,7 @@ license=('MIT')
 depends=('bash')
 optdepends=('fzf: for interactive TUI and menu mode')
 source=("https://github.com/KOUSTAV2409/nf/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('8c0100cfce74b2b44d796e54b2d308f8457b498739a7ebc5f20d2440dfd9ef05')
+sha256sums=('fbec8d7c3cb5551f5658a9b4e0a6c3f1b2e5a2cd96288e2ebd8ef78b9ad60a46')
 
 package() {
   cd "$pkgname-$pkgver"
