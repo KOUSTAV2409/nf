@@ -1,6 +1,6 @@
 # nf — Note Fast
 
-![Version](https://img.shields.io/badge/version-0.2.9-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.3-blue.svg)
 ![License](https://img.shields.io/github/license/KOUSTAV2409/nf?color=4ae68a)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
 
@@ -43,18 +43,27 @@ $ nf count
 
 ## Install
 
-**Package managers (recommended):**
-
-- **macOS:** `brew install nf` (coming soon)
-- **Arch Linux (AUR):** `yay -S nf` (coming soon)
-- **Ubuntu/Debian:** `sudo apt install nf` (coming soon)
-- **Fedora:** `sudo dnf install nf` (coming soon)
-
 **One-liner (universal):**
 
 ```bash
 curl -sL https://nf.iamk.xyz/install | bash
 ```
+
+Skip shell tab-completion setup:
+
+```bash
+curl -sL https://nf.iamk.xyz/install | bash -s -- --no-completion
+```
+
+**Homebrew (macOS / Linux):**
+
+```bash
+brew install KOUSTAV2409/tap/nf
+```
+
+**Arch Linux (AUR):** build from `PKGBUILD` in this repo (`makepkg -si`).
+
+**Debian:** build a `.deb` with `./build_deb.sh`, then `sudo dpkg -i nf_*.deb`.
 
 **Manual:**
 
@@ -69,24 +78,19 @@ sudo ln -s "$(pwd)/nf.sh" /usr/local/bin/nf
 
 ## Update
 
-If you installed via a package manager:
+**Homebrew:**
 
 ```bash
-# macOS
-brew upgrade nf
-
-# Arch
-yay -Syu nf
-
-# Ubuntu/Debian
-sudo apt update && sudo apt upgrade
+brew upgrade KOUSTAV2409/tap/nf
 ```
 
-If you installed via the one-liner or manually:
+**One-liner / manual install:**
 
 ```bash
 nf update
 ```
+
+**Arch / Debian:** rebuild and reinstall from the updated package in this repo.
 
 ---
 
@@ -97,11 +101,12 @@ nf update
 | `nf "text"` | Save a new note |
 | `nf` | Open TUI (requires fzf) or list notes |
 | `nf list` | List all notes |
-| `nf search <term>` | Search notes (case-insensitive) |
+| `nf search <term>` | Search notes (case-insensitive, plain text) |
 | `nf find <term>` | Alias for search |
 | `nf del <number>` | Delete a note by number |
 | `nf edit` | Interactive menu to manage notes |
 | `nf count` | Show total number of notes |
+| `nf update` | Download and install the latest version |
 | `nf help` | Show help |
 | `nf version` | Show version |
 
@@ -135,6 +140,13 @@ brew install fzf             # macOS (Homebrew)
 
 It's a plain text file — one note per line, date-prefixed. You can read it with `cat`, search it with `grep`, back it up with `cp`, edit it with any text editor. No lock-in.
 
+Use a different file path:
+
+```bash
+export NF_NOTES_FILE="$HOME/notes.txt"
+nf "saved to a custom file"
+```
+
 ```
 2025-04-25 fuser -k 3000/tcp — kills process on port 3000
 2025-04-25 ss -tulpn | grep LISTEN — shows all listening ports
@@ -154,6 +166,8 @@ source <(curl -sL https://nf.iamk.xyz/completions/nf.bash)
 ```zsh
 source <(curl -sL https://nf.iamk.xyz/completions/nf.zsh)
 ```
+
+The install script can set this up for you (you'll be asked first in an interactive terminal).
 
 ---
 

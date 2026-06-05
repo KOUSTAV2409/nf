@@ -1,5 +1,11 @@
-nf v0.3.2 — Feature Release
+nf v0.3.3 — Maintenance Release
 
 ✨ What's New:
-- 💡 Added non-blocking terminal startup update checks.
-- 🐚 Added automatic Shell Completion generation and integration for Homebrew installations.
+- 📁 NF_NOTES_FILE env var — store notes anywhere you want.
+- 🔍 Search now treats terms as plain text (no accidental regex surprises).
+- 🧹 Cleaner list code and safer TUI file reload.
+- 🌐 Website rebuilt from shared partials (build.sh, no npm).
+- 📦 Installer asks before editing shell config; --no-completion flag added.
+- 🔗 /uninstall route fixed on nf.iamk.xyz.
+- 📖 README and version metadata synced from a single VERSION file.
+- ✅ ShellCheck CI covers all shell scripts.

@@ -27,6 +27,26 @@ Notes are stored at `~/.local/share/nf/notes` by default. You can set `XDG_DATA_
 XDG_DATA_HOME=/tmp/nf_test ./nf.sh "test note"
 ```
 
+### Website (marketing)
+
+Source lives in `website-src/` (shared partials + page bodies). Rebuild with:
+
+```bash
+./scripts/build-website.sh
+```
+
+`launch.html` is edited directly in `website/` — it is not assembled by the build script.
+
+### Version bumps
+
+Put the new version in `VERSION`, then run:
+
+```bash
+./scripts/sync-version.sh
+```
+
+That updates `nf.sh`, README badge, and packaging metadata.
+
 ---
 
 ## Code Style

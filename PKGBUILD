@@ -1,6 +1,6 @@
-# Maintainer: Your Name <your.email@example.com>
+# Maintainer: KOUSTAV <koustavganguly24@gmail.com>
 pkgname=nf
-pkgver=0.3.2
+pkgver=0.3.3
 pkgrel=1
 pkgdesc="Note Fast - A minimal terminal note-taking tool"
 arch=('any')
@@ -9,7 +9,7 @@ license=('MIT')
 depends=('bash')
 optdepends=('fzf: for interactive TUI and menu mode')
 source=("https://github.com/KOUSTAV2409/nf/archive/refs/tags/v$pkgver.tar.gz")
-sha256sums=('26086dd06de7bb5e0626deb11d62c9cc75b2fedfb42af07ea61e78ef131cb8f6')
+sha256sums=('8c0100cfce74b2b44d796e54b2d308f8457b498739a7ebc5f20d2440dfd9ef05')
 
 package() {
   cd "$pkgname-$pkgver"
