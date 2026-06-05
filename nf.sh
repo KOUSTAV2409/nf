@@ -6,10 +6,13 @@
 
 set -euo pipefail
 
-NF_VERSION="0.3.4"
+NF_VERSION="0.3.5"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 # Override with NF_NOTES_FILE to store notes elsewhere (plain text file).
 NF_FILE="${NF_NOTES_FILE:-$NF_DIR/notes}"
+# Exported .txt files go here by default (~/Downloads/nfExports).
+NF_DOWNLOADS="${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"
+NF_EXPORT_DIR="${NF_EXPORT_DIR:-$NF_DOWNLOADS/nfExports}"
 
 # --- color setup ---
 # Detect whether the terminal supports color output.
@@ -31,6 +34,10 @@ fi
 # Create the storage directory on first use. The user never has to do this.
 nf_ensure_storage() {
   mkdir -p "$NF_DIR"
+}
+
+nf_ensure_export_dir() {
+  mkdir -p "$NF_EXPORT_DIR"
 }
 
 # --- core functions ---
@@ -183,9 +190,10 @@ nf_export_one() {
     return 1
   fi
 
+  nf_ensure_export_dir
   note_line=$(sed -n "${num}p" "$NF_FILE")
   content="${note_line#* }"
-  outfile="note-${num}.txt"
+  outfile="$NF_EXPORT_DIR/note-${num}.txt"
 
   printf '%s\n' "$content" > "$outfile"
   echo -e "${C_GREEN}Exported note $num to ${outfile}${C_RESET}"
@@ -199,7 +207,8 @@ nf_export_all() {
   fi
 
   local outfile
-  outfile="notes-$(date +%Y-%m-%d).txt"
+  nf_ensure_export_dir
+  outfile="$NF_EXPORT_DIR/notes-$(date +%Y-%m-%d).txt"
   cp "$NF_FILE" "$outfile"
   echo -e "${C_GREEN}Exported all notes to ${outfile}${C_RESET}"
 }
@@ -480,6 +489,8 @@ Usage:
 
   Notes are stored at: $NF_FILE
   Override path:       NF_NOTES_FILE=/path/to/notes
+  Exports saved to:    $NF_EXPORT_DIR
+  Override exports:    NF_EXPORT_DIR=/path/to/folder
 EOF
 }
 
