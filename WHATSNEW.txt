@@ -1,7 +1,6 @@
-nf v0.3.4 — Export Release
+nf v0.3.5 — Export folder update
 
 ✨ What's New:
-- 📤 nf export <n> — save one note to note-<n>.txt
-- 📤 nf export <n> <n>... — export several notes at once (one file each)
-- 📤 nf export all — backup entire notebook to notes-YYYY-MM-DD.txt
-- 📖 New guide at nf.iamk.xyz/guides/export
+- 📂 Exports now save to ~/Downloads/nfExports/ by default — easy to find in your file manager.
+- 📁 Export folder is created automatically on first export.
+- ⚙️ Override with NF_EXPORT_DIR if you want a different location.

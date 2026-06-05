@@ -3,7 +3,7 @@ set -euo pipefail
 
 # Define build directory and output package name
 BUILD_DIR="build_deb_temp"
-VERSION="0.3.4"
+VERSION="0.3.5"
 DEB_NAME="nf_${VERSION}_all.deb"
 
 echo "Building Debian package for nf v${VERSION}..."

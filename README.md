@@ -1,6 +1,6 @@
 # nf — Note Fast
 
-![Version](https://img.shields.io/badge/version-0.3.4-blue.svg)
+![Version](https://img.shields.io/badge/version-0.3.5-blue.svg)
 ![License](https://img.shields.io/github/license/KOUSTAV2409/nf?color=4ae68a)
 ![Platform](https://img.shields.io/badge/platform-linux%20%7C%20macos-lightgrey)
 
@@ -104,9 +104,11 @@ nf update
 | `nf search <term>` | Search notes (case-insensitive, plain text) |
 | `nf find <term>` | Alias for search |
 | `nf del <number>` | Delete a note by number |
-| `nf export <n>` | Export one note to `note-<n>.txt` in the current folder |
+| `nf export <n>` | Export one note to `note-<n>.txt` |
 | `nf export <n> <n>...` | Export several notes (one file per number) |
 | `nf export all` | Export entire notebook to `notes-YYYY-MM-DD.txt` |
+
+Exports are saved to `~/Downloads/nfExports/` by default.
 | `nf edit` | Interactive menu to manage notes |
 | `nf count` | Show total number of notes |
 | `nf update` | Download and install the latest version |
@@ -118,10 +120,12 @@ nf update
 `nf list` numbers every note:
 
 ```bash
-nf export 5        # one note  → note-5.txt
-nf export 1 3 5    # several   → note-1.txt, note-3.txt, note-5.txt
-nf export all      # everything → notes-2026-06-05.txt
+nf export 5        # → ~/Downloads/nfExports/note-5.txt
+nf export 1 3 5    # → one file per number in that folder
+nf export all      # → ~/Downloads/nfExports/notes-2026-06-05.txt
 ```
+
+Custom export folder: `export NF_EXPORT_DIR=~/Documents/backups`
 
 Guide: [nf.iamk.xyz/guides/export](https://nf.iamk.xyz/guides/export)
 
