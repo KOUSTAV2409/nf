@@ -6,7 +6,7 @@
 
 set -euo pipefail
 
-NF_VERSION="0.3.3"
+NF_VERSION="0.3.4"
 NF_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/nf"
 # Override with NF_NOTES_FILE to store notes elsewhere (plain text file).
 NF_FILE="${NF_NOTES_FILE:-$NF_DIR/notes}"
@@ -160,6 +160,73 @@ nf_del() {
     sed -i "${num}d" "$NF_FILE"
   fi
   echo "Deleted note $num."
+}
+
+# Export one note by list number to note-<n>.txt (content only, no date prefix).
+nf_export_one() {
+  local num="$1"
+  local total note_line content outfile
+
+  if ! [[ "$num" =~ ^[0-9]+$ ]] || [ "$num" -eq 0 ]; then
+    echo "Note $num not found."
+    return 1
+  fi
+
+  if [ ! -f "$NF_FILE" ] || [ ! -s "$NF_FILE" ]; then
+    echo "Note $num not found."
+    return 1
+  fi
+
+  total=$(wc -l < "$NF_FILE")
+  if [ "$num" -gt "$total" ]; then
+    echo "Note $num not found."
+    return 1
+  fi
+
+  note_line=$(sed -n "${num}p" "$NF_FILE")
+  content="${note_line#* }"
+  outfile="note-${num}.txt"
+
+  printf '%s\n' "$content" > "$outfile"
+  echo -e "${C_GREEN}Exported note $num to ${outfile}${C_RESET}"
+}
+
+# Export the full notebook (every line, as stored) to notes-YYYY-MM-DD.txt.
+nf_export_all() {
+  if [ ! -f "$NF_FILE" ] || [ ! -s "$NF_FILE" ]; then
+    echo "No notes to export."
+    return 1
+  fi
+
+  local outfile
+  outfile="notes-$(date +%Y-%m-%d).txt"
+  cp "$NF_FILE" "$outfile"
+  echo -e "${C_GREEN}Exported all notes to ${outfile}${C_RESET}"
+}
+
+# Export one or more notes by number, or everything with "all".
+nf_export() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: nf export <number> [number...] | nf export all"
+    return 1
+  fi
+
+  if [ "$1" = "all" ]; then
+    if [ $# -gt 1 ]; then
+      echo "Usage: nf export all"
+      return 1
+    fi
+    nf_export_all
+    return
+  fi
+
+  local num failed=0
+  for num in "$@"; do
+    if ! nf_export_one "$num"; then
+      failed=1
+    fi
+  done
+  return "$failed"
 }
 
 # Interactive fzf menu for managing notes
@@ -403,6 +470,8 @@ Usage:
   nf search <term>  Search notes (case-insensitive)
   nf find <term>    Alias for search
   nf del <number>   Delete a note by number
+  nf export <n> [n...] Export note(s) to note-<n>.txt
+  nf export all       Export entire notebook to notes-YYYY-MM-DD.txt
   nf edit           Interactive menu to manage notes
   nf count          Show total number of notes
   nf update         Check for updates and upgrade
@@ -516,6 +585,10 @@ main() {
       ;;
     del|delete|rm)
       nf_del "${2:-}"
+      ;;
+    export)
+      shift
+      nf_export "$@"
       ;;
     edit)
       nf_edit

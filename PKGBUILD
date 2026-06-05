@@ -1,6 +1,6 @@
 # Maintainer: KOUSTAV <koustavganguly24@gmail.com>
 pkgname=nf
-pkgver=0.3.3
+pkgver=0.3.4
 pkgrel=1
 pkgdesc="Note Fast - A minimal terminal note-taking tool"
 arch=('any')

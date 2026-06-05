@@ -354,6 +354,36 @@ body.page-philosophy .quote {
   margin: 40px 0;
 }
 body.page-philosophy footer { margin-top: 80px; }
+body.page-philosophy main pre.example {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 14px 16px;
+  font-size: 13px;
+  line-height: 1.8;
+  overflow-x: auto;
+  margin-bottom: 24px;
+  color: var(--text);
+}
+body.page-philosophy main pre.example .ex-c { color: var(--green); }
+body.page-philosophy main pre.example .ex-d { color: var(--dim); }
+body.page-philosophy main pre.example .ex-ok { color: var(--green); }
+body.page-philosophy main code {
+  color: var(--green);
+  font-size: 0.95em;
+}
+body.page-philosophy .guide-list {
+  list-style: none;
+  margin-bottom: 24px;
+}
+body.page-philosophy .guide-list li {
+  color: var(--dim);
+  font-size: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border);
+}
+body.page-philosophy .guide-list li:last-child { border-bottom: none; }
+body.page-philosophy .guide-list li b { color: var(--text); font-weight: 600; }
 
 /* ---- responsive ---- */
 @media (max-width: 520px) {

@@ -12,6 +12,7 @@ _nf() {
     'del:Delete a note by number'
     'delete:Alias for del'
     'rm:Alias for del'
+    'export:Export note(s) or all notes to .txt files'
     'edit:Interactive menu to manage notes'
     'count:Show total number of notes'
     'update:Check for updates and upgrade'

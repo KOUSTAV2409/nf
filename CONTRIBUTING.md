@@ -78,6 +78,7 @@ That updates `nf.sh`, README badge, and packaging metadata.
 - Distro packaging (`.deb`, `.rpm`, AUR, etc.)
 - Documentation improvements
 - Shell completion scripts
+- Guide pages under `website-src/pages/` (rebuild with `./scripts/build-website.sh`)
 
 ---
 
