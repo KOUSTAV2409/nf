@@ -3,6 +3,7 @@
     { "source": "/install", "destination": "/website/install.sh" },
     { "source": "/uninstall", "destination": "/website/uninstall.sh" },
     { "source": "/philosophy", "destination": "/website/philosophy.html" },
+    { "source": "/guides/export", "destination": "/website/export-guide.html" },
     { "source": "/launch", "destination": "/website/launch.html" },
     { "source": "/og.png", "destination": "/website/og.jpg" },
     { "source": "/completions/:path*", "destination": "/completions/:path*" },

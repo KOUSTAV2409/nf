@@ -32,4 +32,14 @@ chmod +x "$OUT/uninstall.sh"
   printf '%s\n' '</div>' '</body>' '</html>'
 } > "$OUT/philosophy.html"
 
-echo "Built $OUT/index.html, $OUT/philosophy.html, and $OUT/css/site.css"
+{
+  printf '%s\n' '<!DOCTYPE html>' '<html lang="en">' '<head>'
+  cat "$SRC/pages/export-guide.head.html"
+  printf '%s\n' '</head>' '<body class="page-philosophy">' '<div class="w">'
+  cat "$SRC/partials/header-sub.html"
+  cat "$SRC/pages/export-guide.body.html"
+  cat "$SRC/partials/footer.html"
+  printf '%s\n' '</div>' '</body>' '</html>'
+} > "$OUT/export-guide.html"
+
+echo "Built $OUT/index.html, $OUT/philosophy.html, $OUT/export-guide.html, and $OUT/css/site.css"

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Export notes — nf</title>
+  <meta name="description" content="Export one note, several notes, or your full notebook. nf export 5, nf export 1 3 5, or nf export all — plain text, no setup.">
+  <meta property="og:title" content="Export notes — nf">
+  <meta property="og:description" content="Export one note, multiple notes, or everything at once using numbers from nf list.">
+  <meta property="og:image" content="https://nf.iamk.xyz/og.jpg">
+  <meta property="og:url" content="https://nf.iamk.xyz/guides/export">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://nf.iamk.xyz/og.jpg">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <link rel="stylesheet" href="/css/site.css">
+</head>
+<body class="page-philosophy">
+<div class="w">
+    <header>
+      <a href="/">← Back to Home</a>
+    </header>
+    <main>
+      <h1>Export notes</h1>
+
+      <p>Every note in <span class="highlight">nf</span> has a number — you see it in <code>nf list</code>. Export pulls note text into plain <code>.txt</code> files in the folder you are in now.</p>
+
+      <h2>One note</h2>
+      <pre class="example"><span class="ex-c">$</span> nf list
+<span class="ex-d"> 1  2026-06-01  docker system prune -af</span>
+<span class="ex-d"> 2  2026-06-02  refactor auth before friday</span>
+<span class="ex-d"> 3  2026-06-03  ss -tulpn | grep LISTEN</span>
+
+<span class="ex-c">$</span> nf export 3
+<span class="ex-ok">Exported note 3 to note-3.txt</span>
+
+<span class="ex-c">$</span> cat note-3.txt
+ss -tulpn | grep LISTEN</pre>
+      <p>Creates <code>note-&lt;number&gt;.txt</code> with the <span class="highlight">note text only</span> (no date line).</p>
+
+      <h2>Several notes</h2>
+      <p>Pass more than one number. Each gets its own file.</p>
+      <pre class="example"><span class="ex-c">$</span> nf export 1 3 5
+<span class="ex-ok">Exported note 1 to note-1.txt</span>
+<span class="ex-ok">Exported note 3 to note-3.txt</span>
+<span class="ex-ok">Exported note 5 to note-5.txt</span></pre>
+      <p>Order does not matter. Invalid numbers print an error; valid ones still export.</p>
+
+      <h2>All notes at once</h2>
+      <p>One file, full backup — every line exactly as stored (date + text).</p>
+      <pre class="example"><span class="ex-c">$</span> nf export all
+<span class="ex-ok">Exported all notes to notes-2026-06-05.txt</span></pre>
+      <p>Filename includes today’s date. Same content as <code>~/.local/share/nf/notes</code>.</p>
+
+      <h2>Quick reference</h2>
+      <ul class="guide-list">
+        <li><b><code>nf export 5</code></b> — one note → <code>note-5.txt</code></li>
+        <li><b><code>nf export 2 7 10</code></b> — three notes → three files</li>
+        <li><b><code>nf export all</code></b> — whole notebook → <code>notes-YYYY-MM-DD.txt</code></li>
+      </ul>
+
+      <h2>Good to know</h2>
+      <ul class="guide-list">
+        <li><b>Numbers follow list order.</b> After a delete, run <code>nf list</code> again.</li>
+        <li><b>Same numbers as <code>nf del</code>.</b> What you see in the list is what you pass in.</li>
+        <li><b>Re-running overwrites.</b> Exporting the same number again replaces that file.</li>
+        <li><b>Plain text only.</b> No PDF, no cloud — files you can grep, email, or back up.</li>
+      </ul>
+
+      <div class="quote">
+        One note, a few notes, or everything — same command, different arguments.
+      </div>
+    </main>
+  <footer>
+    <div class="w">
+      <span class="foot-left">MIT — built by <a href="https://iamk.xyz" target="_blank" rel="noopener">iamk.xyz</a></span>
+      <div class="foot-right">
+        <a href="https://github.com/KOUSTAV2409/nf" target="_blank" rel="noopener">github</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener">contributing</a>
+        <a href="https://github.com/KOUSTAV2409/nf/blob/main/LICENSE" target="_blank" rel="noopener">license</a>
+      </div>
+    </div>
+  </footer>
+</div>
+</body>
+</html>
